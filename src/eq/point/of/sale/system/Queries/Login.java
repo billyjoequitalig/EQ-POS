@@ -5,6 +5,7 @@
  */
 package eq.point.of.sale.system.Queries;
 
+import eq.point.of.sale.system.DBConnection.DBConnection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,33 +18,13 @@ import java.sql.Statement;
 public class Login {
 
     public static ResultSet rs;
-    private final String Url;
-    private final String Host;
-    private final String Database;
-    private final String Username;
-    private final String Password;
-    public java.sql.Connection connection = null;
-
-    public Login(String host, String database, String username, String password) {
-        Host = host;
-        Database = database;
-        Username = username;
-        Password = password;
-        Url = "jdbc:mysql://" + Host + ":3306/";
-    }
-
-    public void Open() throws SQLException {
-        connection = DriverManager.getConnection(Url + Database + "?autoReconnect=true&useSSL=false" + "", Username, Password);
-    }
-
-    // To Close Connection
-    public void Close() throws SQLException {
-        connection.close();
-    }
+    DBConnection DBcon = new DBConnection("localhost", "3306", "eqpos", "root", "001995234");
+//    public java.sql.Connection connection = null;
 
     public boolean AdminExist(String Username, String Password) throws SQLException {
+
         String sql = "SELECT * FROM accounts WHERE Username='" + Username + "' AND Password = '" + Password + "'";
-        Statement st = connection.createStatement();
+        Statement st = DBcon.gettter().createStatement();
         rs = st.executeQuery(sql);
         return false;
     }

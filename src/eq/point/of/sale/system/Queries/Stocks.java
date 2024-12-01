@@ -5,6 +5,7 @@
  */
 package eq.point.of.sale.system.Queries;
 
+import eq.point.of.sale.system.DBConnection.DBConnection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,31 +20,32 @@ public class Stocks {
 
     public static ResultSet ResultSet;
     public static ResultSet rs;
-    private final String Url;
-    private final String Host;
-    private final String Database;
-    private final String Username;
-    private final String Password;
+//    private final String Url;
+//    private final String Host;
+//    private final String Database;
+//    private final String Username;
+//    private final String Password;
     private int SecId;
     private String Sec;
-    public java.sql.Connection connection = null;
+    DBConnection DBCon = new DBConnection("localhost", "3306", "eqpos", "root", "001995234");
+//    public java.sql.Connection DBCon.gettter() = null;
 
-    public Stocks(String host, String database, String username, String password) {
-        Host = host;
-        Database = database;
-        Username = username;
-        Password = password;
-        Url = "jdbc:mysql://" + Host + ":3306/";
-    }
-
-    public void Open() throws SQLException {
-        connection = DriverManager.getConnection(Url + Database + "?autoReconnect=true&useSSL=false" + "", Username, Password);
-    }
-
-    // To Close Connection
-    public void Close() throws SQLException {
-        connection.close();
-    }
+//    public Stocks(String host, String database, String username, String password) {
+//        Host = host;
+//        Database = database;
+//        Username = username;
+//        Password = password;
+//        Url = "jdbc:mysql://" + Host + ":3306/";
+//    }
+//
+//    public void Open() throws SQLException {
+//        DBCon.gettter() = DriverManager.getConnection(Url + Database + "?autoReconnect=true&useSSL=false" + "", Username, Password);
+//    }
+//
+//    // To Close Connection
+//    public void Close() throws SQLException {
+//        DBCon.gettter().close();
+//    }
 
     public boolean SearchProducts(String Search) throws SQLException {
         String sql = "SELECT products.Product_ID, products.Product, supplier.SupplierName, products.UOM, "
@@ -54,7 +56,7 @@ public class Stocks {
                 + "INNER JOIN color ON color.Color_ID = products.Color_ID "
                 + "INNER JOIN supplier ON supplier.Supplier_ID = products.Supplier_ID "
                 + "WHERE CONCAT(products.Product_ID, products.Product) LIKE '%" + Search + "%'";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         rs = st.executeQuery(sql);
         return false;
     }
@@ -68,7 +70,7 @@ public class Stocks {
                 + "INNER JOIN color ON color.Color_ID = products.Color_ID "
                 + "INNER JOIN supplier ON supplier.Supplier_ID = products.Supplier_ID "
                 + "ORDER BY products.Product ASC";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         rs = st.executeQuery(sql);
         return false;
     }
@@ -76,7 +78,7 @@ public class Stocks {
     public boolean ReadSection() throws SQLException {
         String sql = "SELECT subcategory.SubCategory_ID, subcategory.SubCategory "
                 + "FROM subcategory WHERE subcategory.Category_ID = 2 ";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         rs = st.executeQuery(sql);
         return false;
     }
@@ -84,21 +86,21 @@ public class Stocks {
     public boolean ReadAccessories() throws SQLException {
         String sql = "SELECT subcategory.SubCategory_ID, subcategory.SubCategory "
                 + "FROM subcategory WHERE subcategory.Category_ID = 1 ";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         rs = st.executeQuery(sql);
         return false;
     }
 
     public boolean ReadCategory() throws SQLException {
         String sql = "SELECT * FROM category";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         rs = st.executeQuery(sql);
         return false;
     }
 
     public boolean ReadSupplier() throws SQLException {
         String sql = "SELECT Supplier_ID, SupplierName FROM supplier";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         rs = st.executeQuery(sql);
         return false;
     }
@@ -106,7 +108,7 @@ public class Stocks {
     public boolean ReadSubCategory(String SubCategory) throws SQLException {
         String sql = "SELECT Category_ID "
                 + "FROM subcategory WHERE SubCategory = '" + SubCategory + "'";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         rs = st.executeQuery(sql);
         return false;
     }
@@ -120,7 +122,7 @@ public class Stocks {
                 + "INNER JOIN color ON color.Color_ID = products.Color_ID "
                 + "INNER JOIN supplier ON supplier.Supplier_ID = products.Supplier_ID "
                 + "WHERE products.SubCategory_ID = '" + SubCategory_ID + "'";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         rs = st.executeQuery(sql);
         return false;
     }
@@ -134,7 +136,7 @@ public class Stocks {
                 + "INNER JOIN color ON color.Color_ID = products.Color_ID "
                 + "INNER JOIN supplier ON supplier.Supplier_ID = products.Supplier_ID "
                 + "WHERE products.Category_ID = '" + Category_ID + "'";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         rs = st.executeQuery(sql);
         return false;
     }
@@ -142,14 +144,14 @@ public class Stocks {
     public boolean RefreshSubCategory(String Category_ID) throws SQLException {
         String sql = "SELECT Category_ID"
                 + "FROM subcategory WHERE Category_ID = '" + Category_ID + "'";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         rs = st.executeQuery(sql);
         return false;
     }
     
     public boolean InsertSubCategory(String Category_ID, String SubCategory) throws SQLException {
         String sql = "INSERT INTO subcategory (Category_ID, SubCategory) VALUES ('" + Category_ID + "', '" + SubCategory + "')";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         st.executeUpdate(sql);
         return false;
     }
@@ -157,21 +159,21 @@ public class Stocks {
     public boolean SelectSubCategoryExist(String SubCategory) throws SQLException {
         String sql = "SELECT SubCategory_ID, SubCategory "
                 + "FROM subcategory WHERE SubCategory = '" + SubCategory + "'";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         rs = st.executeQuery(sql);
         return false;
     }
 
     public boolean SelectColorAccessories() throws SQLException {
         String sql = "SELECT color.Color_ID, color.Color FROM color WHERE color.Category_ID = 1";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         rs = st.executeQuery(sql);
         return false;
     }
 
     public boolean SelectColorSection() throws SQLException {
         String sql = "SELECT color.Color_ID, color.Color FROM color WHERE color.Category_ID = 2";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         rs = st.executeQuery(sql);
         return false;
     }
@@ -180,14 +182,14 @@ public class Stocks {
         String sql = "SELECT * FROM Products "
                 + "INNER JOIN color ON products.Color_ID = color.Color_ID "
                 + "WHERE (Product = '" + Product + "' AND Size = '" + Size + "') AND (UOM = '" + UOM + "' AND color.Color_ID = '" + Color + "') AND Product_ID != '" + Product_ID + "'";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         rs = st.executeQuery(sql);
         return false;
     }
 
     public boolean SelectMaxID() throws SQLException {
         String sql = "SELECT MAX(Product_ID) FROM Products";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         rs = st.executeQuery(sql);
         return false;
     }
@@ -198,21 +200,21 @@ public class Stocks {
                 + "VALUES ('" + Product_ID + "','" + Supplier_ID + "','" + Product + "','" + Size + "', "
                 + "'" + Quantity + "','" + UnitPrice + "','" + UOM + "'," + Category_ID + ", "
                 + "" + SubCategory_ID + ",'" + Color_ID + "', CONCAT('" + Product + "', '" + ", Size: " + "', '" + Size + "', '" + ", Color: " + "', '" + Color + "'))";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         st.executeUpdate(sql);
         return false;
     }
 
     public boolean DeleteProduct(String Product_ID) throws SQLException {
         String sql = "DELETE FROM products WHERE Product_ID = '" + Product_ID + "'";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         st.executeUpdate(sql);
         return false;
     }
 
     public boolean DeleteSubCategory(String SubCategory_ID) throws SQLException {
         String sql = "DELETE FROM subcategory WHERE SubCategory_ID = '" + SubCategory_ID + "'";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         st.executeUpdate(sql);
         return false;
     }
@@ -223,7 +225,7 @@ public class Stocks {
                 + "Category_ID =" + Category_ID + ", SubCategory_ID =" + SubCategory_ID + ", "
                 + "Color_ID='" + Color_ID + "', UnitPrice='" + UnitPrice + "', "
                 + "Description=CONCAT('" + Product + "', '" + ", Size: " + "', '" + Size + "', '" + ", Color: " + "', '" + Color + "') WHERE Product_ID ='" + Product_ID + "'";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         st.executeUpdate(sql);
         return false;
     }
@@ -234,7 +236,7 @@ public class Stocks {
                 + "VALUES ('" + user + "','" + Product_ID + "','" + Supplier_ID + "','" + Product_Name + "', "
                 + "CONCAT('" + Product_Name + "', '" + ", Size: " + "', '" + Size + "', '" + ", Color: " + "', '" + Color_ID + "'), "
                 + "'" + UOM + "', '" + Quantity + "', '" + Size + "', '" + Category_ID + "', '" + SubCategory_ID + "','" + Color_ID + "','" + UnitPrice + "',CURTIME(),CURDATE(),'ADD')";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         st.executeUpdate(sql);
         return false;
     }
@@ -246,7 +248,7 @@ public class Stocks {
                 + "VALUES ('" + user + "','" + Product_ID + "','" + Product_Name + "','" + Supplier_ID + "', "
                 + "CONCAT('" + Product_Name + "', '" + ", Size: " + "', '" + Size + "', '" + ", Color: " + "', '" + Color_ID + "'), "
                 + "'" + UOM + "','" + Quantity + "','" + Size + "','" + Category_ID + "','" + SubCategory_ID + "','" + Color_ID + "','" + UnitPrice + "',CURTIME(),CURDATE(),'UPDATE')";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         st.executeUpdate(sql);
         return false;
     }
@@ -258,21 +260,21 @@ public class Stocks {
                 + "VALUES ('" + user + "','" + Product_ID + "','" + Product_Name + "','" + Supplier_ID + "', "
                 + "CONCAT('" + Product_Name + "', '" + ", Size: " + "', '" + Size + "', '" + ", Color: " + "', '" + Color_ID + "'), "
                 + "'" + UOM + "','" + Quantity + "','" + Size + "','" + Category_ID + "','" + SubCategory_ID + "','" + Color_ID + "','" + UnitPrice + "',CURTIME(),CURDATE(),'DELETE')";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         st.executeUpdate(sql);
         return false;
     }
     
     public boolean QuantitySum(String Product_ID, String Quantity, int AddQuantity) throws SQLException {
         String sql = "UPDATE products SET Quantity = '" + Quantity + "' + '" + AddQuantity + "' WHERE Product_ID = '" + Product_ID + "' ";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         st.executeUpdate(sql);
         return false;
     }
     
     public boolean QuantitySubtract(String Product_ID, String Quantity, String AddQuantity) throws SQLException {
         String sql = "UPDATE products SET Quantity = '" + Quantity + "' - '" + AddQuantity + "' WHERE Product_ID = '" + Product_ID + "' ";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         st.executeUpdate(sql);
         return false;
     }

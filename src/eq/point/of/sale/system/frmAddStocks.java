@@ -5,8 +5,10 @@
  */
 package eq.point.of.sale.system;
 
+import eq.point.of.sale.system.DBConnection.DBConnection;
 import eq.point.of.sale.system.Queries.AddStocks;
 import static eq.point.of.sale.system.Queries.AddStocks.rs;
+import eq.point.of.sale.system.Queries.PointOfSale;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,7 +24,8 @@ import org.eclipse.persistence.expressions.ExpressionOperator;
  */
 public class frmAddStocks extends javax.swing.JPanel {
 
-    AddStocks db = new AddStocks("localhost", "eqpos", "root", "");
+    AddStocks db = new AddStocks();
+    DBConnection DBcon = new DBConnection("localhost", "3306", "eqpos", "root", "001995234");
     private frmStocks frmStocks;
 
     /**
@@ -195,10 +198,10 @@ public class frmAddStocks extends javax.swing.JPanel {
     private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
         // TODO add your handling code here:
         try {
-            db.Open();
+            DBcon.Open();
             db.SearchProduct(txtSearch.getText());
             tblAddStock.setModel(DbUtils.resultSetToTableModel(rs));
-            db.Close();
+            DBcon.Close();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e);
         }
@@ -240,12 +243,12 @@ public class frmAddStocks extends javax.swing.JPanel {
                 TotalQuantity = CurrentQuantity + Quantity;
             }
               try {
-                db.Open();
+                DBcon.Open();
                 db.AddStocks(TotalQuantity.toString(), txtProduct_ID.getText());
-                db.Close();
-                db.Open();
+                DBcon.Close();
+                DBcon.Open();
                 db.insertStockLogs(txtProduct_ID.getText(), txtName.getText(),txtEnterQuantity.getText());
-                db.Close();
+                DBcon.Close();
                 frmStocks.RefreshProducts();
                 ReadProducts();
                 txtCurrentQuantity.setText("");
@@ -272,10 +275,10 @@ public class frmAddStocks extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
     private void ReadProducts() {
         try {
-            db.Open();
+            DBcon.Open();
             db.ReadProduct();
             tblAddStock.setModel(DbUtils.resultSetToTableModel(rs));
-            db.Close();
+            DBcon.Close();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e);
         }

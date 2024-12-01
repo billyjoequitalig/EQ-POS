@@ -5,6 +5,7 @@
  */
 package eq.point.of.sale.system;
 
+import eq.point.of.sale.system.DBConnection.DBConnection;
 import static eq.point.of.sale.system.Queries.PointOfSale.rs;
 import eq.point.of.sale.system.Queries.PointOfSale;
 
@@ -19,8 +20,8 @@ import javax.swing.JOptionPane;
  */
 public class frmPayLogs extends javax.swing.JPanel {
 
-    PointOfSale db = new PointOfSale("localhost", "eqpos", "root", "");
-
+    PointOfSale db = new PointOfSale();
+DBConnection DBcon = new DBConnection("localhost", "3306", "eqpos", "root", "001995234");
     /**
      * Creates new form frmPayLogs
      */
@@ -126,7 +127,7 @@ public class frmPayLogs extends javax.swing.JPanel {
         String Customer = cbCustomer.getSelectedItem().toString();
 
         try {
-            db.Open();
+            DBcon.Open();
             db.RangeSearch(Customer, fromDate, toDate);
 
             while (rs.next()) {
@@ -152,7 +153,7 @@ public class frmPayLogs extends javax.swing.JPanel {
         }
 
         try {
-            db.Open();
+            DBcon.Open();
             db.RangeSearch(Customer, fromDate, toDate);
 
             while (rs.next()) {
@@ -181,7 +182,7 @@ public class frmPayLogs extends javax.swing.JPanel {
     public final void GetAccounts() {
         cbCustomer.removeAllItems();
         try {
-            db.Open();
+            DBcon.Open();
             db.SelectCustomers();
             while (rs.next()) {
                 cbCustomer.addItem(rs.getString(1) + " " + rs.getString(2));
@@ -200,7 +201,7 @@ public class frmPayLogs extends javax.swing.JPanel {
     private void curtime() {
 
         try {
-            db.Open();
+            DBcon.Open();
             db.CurrentTime();
             if (rs.next()) {
 
@@ -216,7 +217,7 @@ public class frmPayLogs extends javax.swing.JPanel {
 
     private void curdate() {
         try {
-            db.Open();
+            DBcon.Open();
             db.CurrentDate();
 
             if (rs.next()) {

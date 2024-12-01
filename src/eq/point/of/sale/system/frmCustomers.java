@@ -5,6 +5,7 @@
  */
 package eq.point.of.sale.system;
 
+import eq.point.of.sale.system.DBConnection.DBConnection;
 import eq.point.of.sale.system.Queries.Customers;
 import static eq.point.of.sale.system.Queries.Customers.rs;
 import static eq.point.of.sale.system.frmPointOfSale.cbCustomers;
@@ -22,8 +23,9 @@ import net.proteanit.sql.DbUtils;
  */
 public class frmCustomers extends javax.swing.JPanel {
 
-    Customers db = new Customers("localhost", "eqpos", "root", "");
+    Customers db = new Customers();
     String CustomerID;
+    DBConnection DBCon = new DBConnection("localhost", "3306", "eqpos", "root", "001995234");
 
     /**
      * Creates new form frmCustomers
@@ -433,20 +435,20 @@ private void Access() {
             } else if (txtContactNumber.getText().equals("")) {
                 JOptionPane.showMessageDialog(null, "Please Insert Contact Number!");
             } else {
-                db.Open();
+                DBCon.Open();
                 db.CustomerExist(txtFirstName.getText(), txtLastName.getText());
                 if (rs.next()) {
                     JOptionPane.showMessageDialog(null, "The Customer is already registered\n If the customer has the same name add a suffix(Jr,Sr,III,A.K.A) next to the Last Name \n  to distinguish user informations.");
                 } else {
                     db.InsertCustomer(txtFirstName.getText(), txtMiddleName.getText(), txtLastName.getText(), txtFirstName.getText() + " " + txtLastName.getText(), txtContactNumber.getText(), txtAddress.getText());
                     db.addCustomerLog(frmMain.lblWelcome.getText().replace("Welcome", ""), txtFirstName.getText() + txtLastName.getText());
-                  
+
                     ReadCustomers();
                     new frmPointOfSale().GetCustomers();
                     JOptionPane.showMessageDialog(null, "Successfully Inserted\nRe Login to Apply Changes");
                     Clear();
                 }
-                db.Close();
+                DBCon.Close();
             }
         } catch (HeadlessException | SQLException ex) {
         }
@@ -472,11 +474,11 @@ private void Access() {
         int Delete = JOptionPane.showConfirmDialog(null, "Are you sure you want to Delete?", "DELETE CUSTOMER", JOptionPane.YES_NO_OPTION);
         if (Delete == 0) {
             try {
-                db.Open();
+                DBCon.Open();
                 db.DeleteCustomer(CustomerID);
                 db.deleteCustomerLog(frmMain.lblWelcome.getText().replace("Welcome", ""), txtFirstName.getText() + txtLastName.getText());
 
-                db.Close();
+                DBCon.Close();
                 ReadCustomers();
                 new frmPointOfSale().GetCustomers();
                 Clear();
@@ -489,11 +491,11 @@ private void Access() {
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         //Update Customer
         try {
-            db.Open();
+            DBCon.Open();
             db.UpdateCustomer(txtFirstName.getText(), txtMiddleName.getText(), txtLastName.getText(), txtFirstName.getText() + " " + txtLastName.getText(), txtContactNumber.getText(), txtAddress.getText(), CustomerID);
             db.updateCustomerLog(frmMain.lblWelcome.getText().replace("Welcome", ""), txtFirstName.getText() + txtLastName.getText());
 
-            db.Close();
+            DBCon.Close();
             ReadCustomers();
             JOptionPane.showMessageDialog(null, "Successfully Updated!");
             Clear();
@@ -505,10 +507,10 @@ private void Access() {
     private void txtSearchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyTyped
         //Search Customer
         try {
-            db.Open();
+            DBCon.Open();
             db.SearchCustomer(txtSearch.getText());
             tblCustomers.setModel(DbUtils.resultSetToTableModel(rs));
-            db.Close();
+            DBCon.Close();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e);
         }
@@ -533,10 +535,10 @@ private void Access() {
 
     public final JTable RefreshCustomer() {
         try {
-            db.Open();
+            DBCon.Open();
             db.ReadCustomer();
             tblCustomers.setModel(DbUtils.resultSetToTableModel(rs));
-            db.Close();
+            DBCon.Close();
             Clear();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e);
@@ -592,14 +594,13 @@ private void Access() {
 
     private void ReadCustomers() {
         try {
-            db.Open();
+            DBCon.Open();
             db.ReadCustomer();
             tblCustomers.setModel(DbUtils.resultSetToTableModel(rs));
-            db.Close();
+            DBCon.Close();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e);
         }
     }
 
-    
 }

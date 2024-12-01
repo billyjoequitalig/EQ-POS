@@ -5,6 +5,7 @@
  */
 package eq.point.of.sale.system;
 
+import eq.point.of.sale.system.DBConnection.DBConnection;
 import static eq.point.of.sale.system.Queries.Supplier.rs;
 import eq.point.of.sale.system.Queries.Supplier;
 import java.awt.HeadlessException;
@@ -21,7 +22,8 @@ import net.proteanit.sql.DbUtils;
  */
 public class frmSupplier extends javax.swing.JPanel {
 
-    Supplier db = new Supplier("localhost", "eqpos", "root", "");
+    Supplier db = new Supplier();
+    DBConnection DBCon = new DBConnection("localhost", "3306", "eqpos", "root", "001995234");
     String Supplier_ID;
 
     /**
@@ -356,9 +358,9 @@ public class frmSupplier extends javax.swing.JPanel {
         int Delete = JOptionPane.showConfirmDialog(null, "Are you sure you want to Delete?", "DELETE CUSTOMER", JOptionPane.YES_NO_OPTION);
         if (Delete == 0) {
             try {
-                db.Open();
+                DBCon.Open();
                 db.DeleteSupplier(Supplier_ID);
-                db.Close();
+                DBCon.Close();
                 ReadSupplier();
                 new frmPointOfSale().GetCustomers();
                 btnClearActionPerformed(evt);
@@ -378,9 +380,9 @@ public class frmSupplier extends javax.swing.JPanel {
             } else if (txtContact.getText().equals("")) {
                 JOptionPane.showMessageDialog(null, "Please Insert Contact Number!");
             } else {
-                db.Open();
+                DBCon.Open();
                 db.UpdateSupplier(Supplier_ID, txtSupplierName.getText(), txtContact.getText(), txtAddress.getText());
-                db.Close();
+                DBCon.Close();
                 ReadSupplier();
                 JOptionPane.showMessageDialog(null, "Successfully Updated!");
                 btnAdd.setEnabled(true);
@@ -406,16 +408,16 @@ public class frmSupplier extends javax.swing.JPanel {
             } else if (txtContact.getText().equals("")) {
                 JOptionPane.showMessageDialog(null, "Please Insert Contact Number!");
             } else {
-                db.Open();
+                DBCon.Open();
                 db.SupplierExist(txtSupplierName.getText(), Supplier_ID);
                 if (rs.next()) {
                     JOptionPane.showMessageDialog(null, "This Supplier has Already Exist!");
-                    db.Close();
+                    DBCon.Close();
                 } else {
-                    db.Close();
-                    db.Open();
+                    DBCon.Close();
+                    DBCon.Open();
                     db.InsertSupplier(Supplier_ID, txtSupplierName.getText(), txtContact.getText(), txtAddress.getText());
-                    db.Close();
+                    DBCon.Close();
                     ReadSupplier();
                     new frmPointOfSale().GetCustomers();
                     JOptionPane.showMessageDialog(null, "Successfully Inserted!");
@@ -444,10 +446,10 @@ public class frmSupplier extends javax.swing.JPanel {
     private void txtSearchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyTyped
         //Search
         try {
-            db.Open();
+            DBCon.Open();
             db.SearchSupplier(txtSearch.getText());
             tblSupplier.setModel(DbUtils.resultSetToTableModel(rs));
-            db.Close();
+            DBCon.Close();
             JTableSupplier();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e);
@@ -482,10 +484,10 @@ public class frmSupplier extends javax.swing.JPanel {
     public final JTable RefreshSupplier() {
         //RefreshSupplier
         try {
-            db.Open();
+            DBCon.Open();
             db.ReadSupplier();
             tblSupplier.setModel(DbUtils.resultSetToTableModel(rs));
-            db.Close();
+            DBCon.Close();
             btnAdd.setEnabled(true);
             btnUpdate.setEnabled(false);
             btnDelete.setEnabled(false);
@@ -525,11 +527,11 @@ public class frmSupplier extends javax.swing.JPanel {
 
     private void ReadSupplier() {
         try {
-            db.Open();
+            DBCon.Open();
             db.ReadSupplier();
             tblSupplier.setModel(DbUtils.resultSetToTableModel(rs));
             JTableSupplier();
-            db.Close();
+            DBCon.Close();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e);
         }

@@ -5,6 +5,7 @@
  */
 package eq.point.of.sale.system;
 
+import eq.point.of.sale.system.DBConnection.DBConnection;
 import eq.point.of.sale.system.Queries.AddStocks;
 import static eq.point.of.sale.system.Queries.AddStocks.rs;
 import static eq.point.of.sale.system.frmAddStocks.tblAddStock;
@@ -17,8 +18,8 @@ import net.proteanit.sql.DbUtils;
  * @author Diowinard Medrano
  */
 public class frmStocksLog extends javax.swing.JPanel {
-AddStocks db = new AddStocks("localhost", "eqpos", "root", "");
-   
+AddStocks db = new AddStocks();
+   DBConnection DBcon = new DBConnection("localhost", "3306", "eqpos", "root", "001995234");
     /**
      * Creates new form frmStocksLog
      */
@@ -31,7 +32,7 @@ AddStocks db = new AddStocks("localhost", "eqpos", "root", "");
       public final void GetAccounts() {
         cbAdmins.removeAllItems();
         try {
-            db.Open();
+            DBcon.Open();
             db.SelectAccounts();
             while (rs.next()) {
                 cbAdmins.addItem(rs.getString(1) + " " + rs.getString(2));
@@ -43,11 +44,11 @@ AddStocks db = new AddStocks("localhost", "eqpos", "root", "");
     
 private void LoadLogs() {
         try {
-            db.Open();
+            DBcon.Open();
             db.LoadLogs();
             tblLoadLogs.setModel(DbUtils.resultSetToTableModel(rs));
             
-            db.Close();
+            DBcon.Close();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e);
         }

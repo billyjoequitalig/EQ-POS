@@ -9,6 +9,7 @@ import eq.point.of.sale.system.Comboboxes.ColorComboBox;
 import eq.point.of.sale.system.Comboboxes.SubCategoryComboBox;
 import eq.point.of.sale.system.Comboboxes.CategoryComboBox;
 import eq.point.of.sale.system.Comboboxes.SupplierComboBox;
+import eq.point.of.sale.system.DBConnection.DBConnection;
 import eq.point.of.sale.system.Queries.Stocks;
 import static eq.point.of.sale.system.Queries.Stocks.rs;
 import java.awt.HeadlessException;
@@ -32,7 +33,8 @@ import net.proteanit.sql.DbUtils;
  */
 public class frmStocks extends javax.swing.JPanel {
 
-    Stocks db = new Stocks("localhost", "eqpos", "root", "");
+    Stocks db = new Stocks();
+    DBConnection DBCon = new DBConnection("localhost", "3306", "eqpos", "root", "001995234");
     private frmMain frmMain;
     String Product_ID;
 
@@ -51,7 +53,7 @@ public class frmStocks extends javax.swing.JPanel {
 
     public void BindComboCat() {
         try {
-            db.Open();
+            DBCon.Open();;
             HashMap<String, Integer> mapcat = populateComboCategory();
             mapcat.keySet().stream().map((c) -> {
                 cbCategory.addItem(c);
@@ -59,26 +61,26 @@ public class frmStocks extends javax.swing.JPanel {
             }).forEachOrdered((c) -> {
                 cbCategorySort.addItem(c);
             });
-            db.Close();
+            DBCon.Close();
         } catch (SQLException e) {
         }
     }
 
     public void BindComboSupplier() {
         try {
-            db.Open();
+            DBCon.Open();;
             HashMap<String, Integer> mapsup = populateComboSupplier();
             mapsup.keySet().forEach((c) -> {
                 cbSupplier.addItem(c);
             });
-            db.Close();
+            DBCon.Close();
         } catch (SQLException e) {
         }
     }
 
     public void BindComboAcc() {
         try {
-            db.Open();
+            DBCon.Open();;
             HashMap<String, Integer> mapacc = populateComboAccessories();
             mapacc.keySet().stream().map((a) -> {
                 cbSubCategory.addItem(a);
@@ -86,14 +88,14 @@ public class frmStocks extends javax.swing.JPanel {
             }).forEachOrdered((a) -> {
                 cbSubCategorySort.addItem(a);
             });
-            db.Close();
+            DBCon.Close();
         } catch (SQLException e) {
         }
     }
 
     public void BindComboSec() {
         try {
-            db.Open();
+            DBCon.Open();;
             HashMap<String, Integer> mapsec = populateComboSection();
             mapsec.keySet().stream().map((b) -> {
                 cbSubCategory.addItem(b);
@@ -101,31 +103,31 @@ public class frmStocks extends javax.swing.JPanel {
             }).forEachOrdered((b) -> {
                 cbSubCategorySort.addItem(b);
             });
-            db.Close();
+            DBCon.Close();
         } catch (SQLException e) {
         }
     }
 
     public void BindComboColorSection() {
         try {
-            db.Open();
+            DBCon.Open();;
             HashMap<String, Integer> mapsec = populateComboColorSection();
             mapsec.keySet().forEach((b) -> {
                 cbColor.addItem(b);
             });
-            db.Close();
+            DBCon.Close();
         } catch (SQLException e) {
         }
     }
 
     public void BindComboColorAccessories() {
         try {
-            db.Open();
+            DBCon.Open();;
             HashMap<String, Integer> mapacc = populateComboColorAccessories();
             mapacc.keySet().forEach((b) -> {
                 cbColor.addItem(b);
             });
-            db.Close();
+            DBCon.Close();
         } catch (SQLException e) {
         }
     }
@@ -704,24 +706,24 @@ public class frmStocks extends javax.swing.JPanel {
                 JOptionPane.showConfirmDialog(null, "Enter New " + lblCategory.getText(), "Invalid!", ERROR_MESSAGE);
                 ShowInputDialogSubCategory();
             } else {
-                db.Open();
+                DBCon.Open();;
                 db.SelectSubCategoryExist(SubCategory);
                 if (rs.next()) {
                     JOptionPane.showMessageDialog(null, "This " + SubCategory + " is Already Exist!", "Invalid!", ERROR_MESSAGE);
-                    db.Close();
+                    DBCon.Close();
                     ShowInputDialogSubCategory();
                 } else {
-                    db.Open();
+                    DBCon.Open();;
                     db.InsertSubCategory(Category, SubCategory);
                     int msg = JOptionPane.showConfirmDialog(null, "Successfully " + SubCategory + " Added! Do You Want Add More Section??", "Message", JOptionPane.YES_NO_OPTION);
-                    db.Close();
+                    DBCon.Close();
                     if (msg == 0) {
                         if ("1".equals(Category)) {
                             cbSubCategory.removeAllItems();
                             BindComboAcc();
                             ShowInputDialogSubCategory();
                         } else if ("2".equals(Category)) {
-                            db.Close();
+                            DBCon.Close();
                             cbSubCategory.removeAllItems();
                             BindComboSec();
                             ShowInputDialogSubCategory();
@@ -734,9 +736,9 @@ public class frmStocks extends javax.swing.JPanel {
                             cbSubCategory.removeAllItems();
                             BindComboSec();
                         }
-                        db.Close();
+                        DBCon.Close();
                     }
-                    db.Close();
+                    DBCon.Close();
                 }
             }
 
@@ -767,10 +769,10 @@ public class frmStocks extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(null, "Not Valid Number", "Invalid!", ERROR_MESSAGE);
                     ShowInputDialogAddQuantity();
                 } else if (a >= 0) {
-                    db.Open();
+                    DBCon.Open();;
                     db.QuantitySum(txtProductID.getText(), txtQuantity.getText(), Quantity);
                     int msg = JOptionPane.showConfirmDialog(null, "Successfully Quantity Added!", "Message", JOptionPane.YES_NO_OPTION);
-                    db.Close();
+                    DBCon.Close();
                     RefreshProducts();
                     txtQuantity.setText(d);
                 }
@@ -807,10 +809,10 @@ public class frmStocks extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(null, "Not Valid Number!", "Invalid!", ERROR_MESSAGE);
                     ShowInputDialogSubtractQuantity();
                 } else {
-                    db.Open();
+                    DBCon.Open();;
                     db.QuantitySubtract(txtProductID.getText(), txtQuantity.getText(), Quantity);
                     int msg = JOptionPane.showConfirmDialog(null, "Successfully Quantity Subtracted!", "Message", JOptionPane.YES_NO_OPTION);
-                    db.Close();
+                    DBCon.Close();
                     RefreshProducts();
                     txtQuantity.setText(d);
                 }
@@ -833,12 +835,12 @@ public class frmStocks extends javax.swing.JPanel {
         int Confirm = JOptionPane.showConfirmDialog(null, "Are You Sure You want to Delete This Product?", "DELETE PRODUCT", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
         if (Confirm == 0) {
             try {
-                db.Open();
+                DBCon.Open();;
                 db.DeleteProduct(txtProductID.getText());
-                db.Close();
-                db.Open();
+                DBCon.Close();
+                DBCon.Open();;
                 db.DeleteStocksLogs(frmMain.lblWelcome.getText().replace("Welcome", ""), txtProductID.getText(), txtProduct.getText(), cbSupplier.getSelectedItem().toString(), cbUnitOfMeasure.getSelectedItem().toString(), txtSize.getText(), cbCategory.getSelectedItem().toString(), cbSubCategory.getSelectedItem().toString(), cbColor.getSelectedItem().toString(), txtUnitPrice.getText(), txtQuantity.getText());
-                db.Close();
+                DBCon.Close();
                 Clear();
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(Center, e);
@@ -867,21 +869,21 @@ public class frmStocks extends javax.swing.JPanel {
                     HashMap<String, Integer> coloracc = populateComboColorAccessories();
                     String ColorAccessories = coloracc.get(cbColor.getSelectedItem().toString()).toString();
                     try {
-                        db.Open();
+                        DBCon.Open();;
                         db.SelectProductExist(txtProduct.getText(), txtSize.getText(), cbUnitOfMeasure.getSelectedItem().toString(), ColorAccessories, txtProductID.getText());
                         if (rs.next()) {
                             JOptionPane.showMessageDialog(null, "This Product is already Exist!");
-                            db.Close();
+                            DBCon.Close();
                         } else {
-                            db.Open();
+                            DBCon.Open();;
                             HashMap<String, Integer> acc = populateComboAccessories();
                             String Accessories = acc.get(cbSubCategory.getSelectedItem().toString()).toString();
                             db.UpdateProducts(txtProductID.getText(), txtProduct.getText(), Supplier, cbUnitOfMeasure.getSelectedItem().toString(), txtQuantity.getText(), txtSize.getText(), Category, Accessories, ColorAccessories, txtUnitPrice.getText(), cbColor.getSelectedItem().toString());
-                            db.Close();
-                            db.Open();
+                            DBCon.Close();
+                            DBCon.Open();;
                             db.UpdateStocksLogs(frmMain.lblWelcome.getText().replace("Welcome", ""), txtProductID.getText(), txtProduct.getText(), cbSupplier.getSelectedItem().toString(), cbUnitOfMeasure.getSelectedItem().toString(), txtSize.getText(), cbCategory.getSelectedItem().toString(), cbSubCategory.getSelectedItem().toString(), cbColor.getSelectedItem().toString(), txtUnitPrice.getText(), txtQuantity.getText());
                             JOptionPane.showMessageDialog(null, "Successfully Product Update! Accessories");
-                            db.Close();
+                            DBCon.Close();
                             Clear();
                             RefreshProducts();
                             SetProductID();
@@ -894,21 +896,21 @@ public class frmStocks extends javax.swing.JPanel {
                     try {
                         HashMap<String, Integer> colorsec = populateComboColorSection();
                         String ColorSection = colorsec.get(cbColor.getSelectedItem().toString()).toString();
-                        db.Open();
+                        DBCon.Open();;
                         db.SelectProductExist(txtProduct.getText(), txtSize.getText(), cbUnitOfMeasure.getSelectedItem().toString(), ColorSection, txtProductID.getText());
                         if (rs.next()) {
                             JOptionPane.showMessageDialog(null, "This Product is already Exist!");
-                            db.Close();
+                            DBCon.Close();
                         } else {
-                            db.Open();
+                            DBCon.Open();;
                             HashMap<String, Integer> sec = populateComboSection();
                             String Section = sec.get(cbSubCategory.getSelectedItem().toString()).toString();
                             db.UpdateProducts(txtProductID.getText(), txtProduct.getText(), Supplier, cbUnitOfMeasure.getSelectedItem().toString(), txtQuantity.getText(), txtSize.getText(), Category, Section, ColorSection, txtUnitPrice.getText(), cbColor.getSelectedItem().toString());
-                            db.Close();
-                            db.Open();
+                            DBCon.Close();
+                            DBCon.Open();;
                             db.UpdateStocksLogs(frmMain.lblWelcome.getText().replace("Welcome", ""), txtProductID.getText(), txtProduct.getText(), cbSupplier.getSelectedItem().toString(), cbUnitOfMeasure.getSelectedItem().toString(), txtSize.getText(), cbCategory.getSelectedItem().toString(), cbSubCategory.getSelectedItem().toString(), cbColor.getSelectedItem().toString(), txtUnitPrice.getText(), txtQuantity.getText());
                             JOptionPane.showMessageDialog(null, "Successfully Product Update! Section");
-                            db.Close();
+                            DBCon.Close();
                             RefreshProducts();
                             SetProductID();
                             Clear();
@@ -944,21 +946,21 @@ public class frmStocks extends javax.swing.JPanel {
             HashMap<String, Integer> coloracc = populateComboColorAccessories();
             String ColorAccessories = coloracc.get(cbColor.getSelectedItem().toString()).toString();
             try {
-                db.Open();
+                DBCon.Open();;
                 db.SelectProductExist(txtProduct.getText(), txtSize.getText(), cbUnitOfMeasure.getSelectedItem().toString(), ColorAccessories, txtProductID.getText());
                 if (rs.next()) {
                     JOptionPane.showMessageDialog(null, "This Product is already Exist!");
-                    db.Close();
+                    DBCon.Close();
                 } else {
-                    db.Open();
+                    DBCon.Open();
                     HashMap<String, Integer> acc = populateComboAccessories();
                     String Accessories = acc.get(cbSubCategory.getSelectedItem().toString()).toString();
                     db.InsertProduct(txtProductID.getText(), Supplier, txtProduct.getText(), txtSize.getText(), txtQuantity.getText(), txtUnitPrice.getText(), cbUnitOfMeasure.getSelectedItem().toString(), Category, Accessories, ColorAccessories, cbColor.getSelectedItem().toString());
-                    db.Close();
-                    db.Open();
+                    DBCon.Close();
+                    DBCon.Open();
                     db.NewStocksLogs(frmMain.lblWelcome.getText().replace("Welcome", ""), txtProductID.getText(), txtProduct.getText(), cbSupplier.getSelectedItem().toString(), cbUnitOfMeasure.getSelectedItem().toString(), txtSize.getText(), cbCategory.getSelectedItem().toString(), cbSubCategory.getSelectedItem().toString(), cbColor.getSelectedItem().toString(), txtUnitPrice.getText(), txtQuantity.getText());
                     JOptionPane.showMessageDialog(null, "Successfully Product Added!");
-                    db.Close();
+                    DBCon.Close();
                     RefreshProducts();
                     SetProductID();
                     Clear();
@@ -970,21 +972,21 @@ public class frmStocks extends javax.swing.JPanel {
             try {
                 HashMap<String, Integer> colorsec = populateComboColorSection();
                 String ColorSection = colorsec.get(cbColor.getSelectedItem().toString()).toString();
-                db.Open();
+                DBCon.Open();
                 db.SelectProductExist(txtProduct.getText(), txtSize.getText(), cbUnitOfMeasure.getSelectedItem().toString(), ColorSection, txtProductID.getText());
                 if (rs.next()) {
                     JOptionPane.showMessageDialog(null, "This Product is already Exist!");
-                    db.Close();
+                    DBCon.Close();
                 } else {
-                    db.Open();
+                    DBCon.Open();
                     HashMap<String, Integer> sec = populateComboSection();
                     String Section = sec.get(cbSubCategory.getSelectedItem().toString()).toString();
                     db.InsertProduct(txtProductID.getText(), Supplier, txtProduct.getText(), txtSize.getText(), txtQuantity.getText(), txtUnitPrice.getText(), cbUnitOfMeasure.getSelectedItem().toString(), Category, Section, ColorSection, cbColor.getSelectedItem().toString());
-                    db.Close();
-                    db.Open();
+                    DBCon.Close();
+                    DBCon.Open();
                     db.NewStocksLogs(frmMain.lblWelcome.getText().replace("Welcome", ""), txtProductID.getText(), txtProduct.getText(), cbSupplier.getSelectedItem().toString(), cbUnitOfMeasure.getSelectedItem().toString(), txtSize.getText(), cbCategory.getSelectedItem().toString(), cbSubCategory.getSelectedItem().toString(), cbColor.getSelectedItem().toString(), txtUnitPrice.getText(), txtQuantity.getText());
                     JOptionPane.showMessageDialog(null, "Successfully Product Added!");
-                    db.Close();
+                    DBCon.Close();
                     RefreshProducts();
                     SetProductID();
                     Clear();
@@ -1012,10 +1014,10 @@ public class frmStocks extends javax.swing.JPanel {
     private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
         //Search Product
         try {
-            db.Open();
+            DBCon.Open();
             db.SearchProducts(txtSearch.getText());
             tblProducts.setModel(DbUtils.resultSetToTableModel(rs));
-            db.Close();
+            DBCon.Close();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e);
         }
@@ -1069,10 +1071,10 @@ public class frmStocks extends javax.swing.JPanel {
 
     private void cbCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCategoryActionPerformed
         try {
-            db.Open();
+            DBCon.Open();
             HashMap<String, Integer> cat = populateComboCategory();
             String category = cat.get(cbCategory.getSelectedItem().toString()).toString();
-            db.Close();
+            DBCon.Close();
             switch (category) {
                 case "1":
                     btnAddSubCat.setEnabled(true);
@@ -1113,9 +1115,9 @@ public class frmStocks extends javax.swing.JPanel {
             int Confirm = JOptionPane.showConfirmDialog(null, "Are You Sure You want to Delete This " + cbSubCategory.getSelectedItem() + "?", "DELETE", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
             if (Confirm == 0) {
                 try {
-                    db.Open();
+                    DBCon.Open();
                     db.DeleteSubCategory(Accessories);
-                    db.Close();
+                    DBCon.Close();
                     cbSubCategory.removeAllItems();
                     BindComboAcc();
                 } catch (SQLException e) {
@@ -1128,9 +1130,9 @@ public class frmStocks extends javax.swing.JPanel {
             int Confirm = JOptionPane.showConfirmDialog(null, "Are You Sure You want to Delete This " + cbSubCategory.getSelectedItem() + "?", "DELETE", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
             if (Confirm == 0) {
                 try {
-                    db.Open();
+                    DBCon.Open();
                     db.DeleteSubCategory(Section);
-                    db.Close();
+                    DBCon.Close();
                     cbSubCategory.removeAllItems();
                     BindComboSec();
                 } catch (SQLException e) {
@@ -1143,28 +1145,28 @@ public class frmStocks extends javax.swing.JPanel {
     private void cbCategorySortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCategorySortActionPerformed
         //Sort By Category
         try {
-            db.Open();
+            DBCon.Open();
             HashMap<String, Integer> cat = populateComboCategory();
             String category = cat.get(cbCategorySort.getSelectedItem().toString()).toString();
-            db.Close();
+            DBCon.Close();
             if ("1".equals(category)) {
                 cbSubCategorySort.removeAllItems();
                 cbSubCategory.removeAllItems();
                 RefreshProducts();
                 BindComboAcc();
-                db.Open();
+                DBCon.Open();
                 db.SortProduct(category);
                 tblProducts.setModel(DbUtils.resultSetToTableModel(rs));
-                db.Close();
+                DBCon.Close();
             } else {
                 cbSubCategorySort.removeAllItems();
                 cbSubCategory.removeAllItems();
                 RefreshProducts();
                 BindComboSec();
-                db.Open();
+                DBCon.Open();
                 db.SortProduct(category);
                 tblProducts.setModel(DbUtils.resultSetToTableModel(rs));
-                db.Close();
+                DBCon.Close();
             }
         } catch (HeadlessException | SQLException | NullPointerException e) {
         }
@@ -1173,24 +1175,24 @@ public class frmStocks extends javax.swing.JPanel {
     private void cbSubCategorySortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbSubCategorySortActionPerformed
         //Sort By SubCategory
         try {
-            db.Open();
+            DBCon.Open();
             HashMap<String, Integer> cat = populateComboCategory();
             String category = cat.get(cbCategorySort.getSelectedItem().toString()).toString();
-            db.Close();
+            DBCon.Close();
             if ("1".equals(category)) {
                 HashMap<String, Integer> acc = populateComboAccessories();
                 String Accessories = acc.get(cbSubCategorySort.getSelectedItem().toString()).toString();
-                db.Open();
+                DBCon.Open();
                 db.ReadSubCategorySort(Accessories);
                 tblProducts.setModel(DbUtils.resultSetToTableModel(rs));
-                db.Close();
+                DBCon.Close();
             } else {
                 HashMap<String, Integer> sec = populateComboSection();
                 String Section = sec.get(cbSubCategorySort.getSelectedItem().toString()).toString();
-                db.Open();
+                DBCon.Open();
                 db.ReadSubCategorySort(Section);
                 tblProducts.setModel(DbUtils.resultSetToTableModel(rs));
-                db.Close();
+                DBCon.Close();
             }
         } catch (HeadlessException | SQLException | NullPointerException e) {
         }
@@ -1225,7 +1227,7 @@ public class frmStocks extends javax.swing.JPanel {
         SimpleDateFormat YearFormat = new SimpleDateFormat("yy");
         Integer Year = Integer.parseInt(YearFormat.format(date));
         try {
-            db.Open();
+            DBCon.Open();
             db.SelectMaxID();
             if (rs.next()) {
                 if (rs.getString(1) == null) {
@@ -1268,10 +1270,10 @@ public class frmStocks extends javax.swing.JPanel {
 
     public final JTable RefreshProducts() {
         try {
-            db.Open();
+            DBCon.Open();
             db.ReadProducts();
             tblProducts.setModel(DbUtils.resultSetToTableModel(rs));
-            db.Close();
+            DBCon.Close();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e);
         }
@@ -1281,7 +1283,7 @@ public class frmStocks extends javax.swing.JPanel {
     public HashMap<String, Integer> populateComboSupplier() {
         HashMap<String, Integer> map = new HashMap<>();
         try {
-            db.Open();
+            DBCon.Open();
             db.ReadSupplier();
             SupplierComboBox scb;
             while (rs.next()) {
@@ -1296,7 +1298,7 @@ public class frmStocks extends javax.swing.JPanel {
     public HashMap<String, Integer> populateComboCategory() {
         HashMap<String, Integer> map = new HashMap<>();
         try {
-            db.Open();
+            DBCon.Open();
             db.ReadCategory();
             CategoryComboBox ccb;
             while (rs.next()) {
@@ -1311,7 +1313,7 @@ public class frmStocks extends javax.swing.JPanel {
     public HashMap<String, Integer> populateComboAccessories() {
         HashMap<String, Integer> map = new HashMap<>();
         try {
-            db.Open();
+            DBCon.Open();
             db.ReadAccessories();
             SubCategoryComboBox sccb;
             while (rs.next()) {
@@ -1326,7 +1328,7 @@ public class frmStocks extends javax.swing.JPanel {
     public HashMap<String, Integer> populateComboSection() {
         HashMap<String, Integer> map = new HashMap<>();
         try {
-            db.Open();
+            DBCon.Open();
             db.ReadSection();
             SubCategoryComboBox sccb;
             while (rs.next()) {
@@ -1341,7 +1343,7 @@ public class frmStocks extends javax.swing.JPanel {
     public HashMap<String, Integer> populateComboColorAccessories() {
         HashMap<String, Integer> map = new HashMap<>();
         try {
-            db.Open();
+            DBCon.Open();
             db.SelectColorAccessories();
             ColorComboBox ccb;
             while (rs.next()) {
@@ -1356,7 +1358,7 @@ public class frmStocks extends javax.swing.JPanel {
     public HashMap<String, Integer> populateComboColorSection() {
         HashMap<String, Integer> map = new HashMap<>();
         try {
-            db.Open();
+            DBCon.Open();
             db.SelectColorSection();
             ColorComboBox sccb;
             while (rs.next()) {

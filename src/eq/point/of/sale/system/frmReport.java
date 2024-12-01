@@ -5,6 +5,7 @@
  */
 package eq.point.of.sale.system;
 
+import eq.point.of.sale.system.DBConnection.DBConnection;
 import eq.point.of.sale.system.Queries.Report;
 import static eq.point.of.sale.system.Queries.Report.rs;
 import eq.point.of.sale.system.Queries.Supplier;
@@ -23,7 +24,8 @@ import net.proteanit.sql.DbUtils;
  */
 public class frmReport extends javax.swing.JPanel {
 
-    Report db = new Report("localhost", "eqpos", "root", "");
+    Report db = new Report();
+    DBConnection DBCon = new DBConnection("localhost", "3306", "eqpos", "root", "001995234");
 
     /**
      * Creates new form frmCustomers
@@ -276,15 +278,15 @@ public class frmReport extends javax.swing.JPanel {
 
         try {
             if (cbReport.getSelectedIndex() == 0) {
-                db.Open();
+                DBCon.Open();
                 db.RangeSearch(fromDate, toDate);
                 tblReport.setModel(DbUtils.resultSetToTableModel(rs));
-                db.Close();
+                DBCon.Close();
             } else if (cbReport.getSelectedIndex() == 1) {
-                db.Open();
+                DBCon.Open();
                 db.monthlyReport(fromDate, toDate, fromMMFormat, toMMFormat);
                 tblReport.setModel(DbUtils.resultSetToTableModel(rs));
-                db.Close();
+                DBCon.Close();
             } else if (cbReport.getSelectedIndex() == 2) {
 
             }
@@ -295,10 +297,10 @@ public class frmReport extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
     public final void readReport() {
         try {
-            db.Open();
+            DBCon.Open();
             db.readReport();
             tblReport.setModel(DbUtils.resultSetToTableModel(rs));
-            db.Close();
+            DBCon.Close();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e);
         }

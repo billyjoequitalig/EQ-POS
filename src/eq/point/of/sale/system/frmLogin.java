@@ -5,6 +5,7 @@
  */
 package eq.point.of.sale.system;
 
+import eq.point.of.sale.system.DBConnection.DBConnection;
 import eq.point.of.sale.system.Queries.Login;
 import static eq.point.of.sale.system.Queries.Login.rs;
 import static eq.point.of.sale.system.frmMain.btnUserManagement;
@@ -21,8 +22,8 @@ import javax.swing.JOptionPane;
  * @author billy
  */
 public class frmLogin extends javax.swing.JFrame {
-
-    Login db = new Login("localhost", "eqpos", "root", "");
+    DBConnection DBcon = new DBConnection("localhost", "3306", "eqpos",  "root","001995234");
+    Login db = new Login();
     public static String AccessType;
 
     /**
@@ -294,7 +295,7 @@ public class frmLogin extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Please Enter Password");
             } else {
                 //Check Admin if Existing
-                db.Open();
+                DBcon.Open();
                 db.AdminExist(txtUsername.getText(), new String(txtPassword.getPassword()));
                 if (rs.next()) {
                     Fullname = rs.getString(2) + " " + rs.getString(3);

@@ -5,6 +5,7 @@
  */
 package eq.point.of.sale.system;
 
+import eq.point.of.sale.system.DBConnection.DBConnection;
 import eq.point.of.sale.system.Queries.AddStocks;
 import static eq.point.of.sale.system.Queries.AddStocks.rs;
 import java.sql.SQLException;
@@ -20,8 +21,8 @@ public class frmAddStocksLog extends javax.swing.JPanel {
 
   static String Jaction;
 
-    AddStocks db = new AddStocks("localhost", "eqpos", "root", "");
-    
+    AddStocks db = new AddStocks();
+    DBConnection DBcon = new DBConnection("localhost", "3306", "eqpos", "root", "001995234");
 
     /**
      * Creates new form frmStocksLog
@@ -39,7 +40,7 @@ public class frmAddStocksLog extends javax.swing.JPanel {
     public final void GetAccounts() {
         cbAdmins.removeAllItems();
         try {
-            db.Open();
+            DBcon.Open();
             db.SelectAccounts();
             while (rs.next()) {
                 cbAdmins.addItem(rs.getString(1) + " " + rs.getString(2));
@@ -61,7 +62,7 @@ public class frmAddStocksLog extends javax.swing.JPanel {
 //        minute = ((m >= 0 && m < 60) ? m : 0);
 //        second = ((s >= 0 && s < 60) ? s : 0);
         try {
-            db.Open();
+            DBcon.Open();
             db.CurrentTime();
             if (rs.next()) {
 
@@ -77,7 +78,7 @@ public class frmAddStocksLog extends javax.swing.JPanel {
 
     private void curdate() {
         try {
-            db.Open();
+            DBcon.Open();
             db.CurrentDate();
 
             if (rs.next()) {
@@ -312,7 +313,7 @@ public class frmAddStocksLog extends javax.swing.JPanel {
         if (JAction.getSelectedIndex() == 1) {
          
             try {
-                db.Open();
+                DBcon.Open();
                 db.addLog(date);
                
                 while (rs.next()) {
@@ -327,13 +328,13 @@ public class frmAddStocksLog extends javax.swing.JPanel {
 
                 }
                
-                db.Close();
+                DBcon.Close();
             } catch (SQLException e) {
             }
         } else if (JAction.getSelectedIndex() == 2) {
  
             try {
-                db.Open();
+                DBcon.Open();
                 db.updateLog(date);
                 while (rs.next()) {
                     String user = rs.getString("user");
@@ -353,13 +354,13 @@ public class frmAddStocksLog extends javax.swing.JPanel {
                   JtextLogs.append(user + " Updated the Product " + Product_Name + " \t\t\t" + Time + "\t" + Date + "\n\n TO:   " + Product_Distributor + "   " + Product_Name + "    " + UnitOfMeasure + "    " + Quantity + "    " + Size + "    " + Section + "    " + Accessories + "    " + Color + "    " + UnitPrice + "\n\t\n--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
 
                 }
-                db.Close();
+                DBcon.Close();
             } catch (SQLException e) {
             }
         } else if (JAction.getSelectedIndex() == 3) {
  
             try {
-                db.Open();
+                DBcon.Open();
                 db.deleteLog(date);
                 while (rs.next()) {
                     String user = rs.getString("user");
@@ -369,14 +370,14 @@ public class frmAddStocksLog extends javax.swing.JPanel {
                     String Date = rs.getString("Date");
                     JtextLogs.append(user + " Deleted the Product " + Product_Name + " \t\t\t" + Time + "\t" + Date + "\n ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
                 }
-                db.Close();
+                DBcon.Close();
             } catch (SQLException e) {
             }
 
         } else if (JAction.getSelectedIndex() == 4) {
 
             try {
-                db.Open();
+                DBcon.Open();
                 db.AddStockLog(date);
 
                 while (rs.next()) {
@@ -389,7 +390,7 @@ public class frmAddStocksLog extends javax.swing.JPanel {
 //                   
                     JtextLogs.append(user + " Added  " + EnterQuantity + " Quantity of " + " Product " + Product_Name + "\t\t" + Time + "\t" + Date + "\n ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
                 }
-                db.Close();
+                DBcon.Close();
             } catch (SQLException e) {
             }
         }

@@ -5,6 +5,7 @@
  */
 package eq.point.of.sale.system;
 
+import eq.point.of.sale.system.DBConnection.DBConnection;
 import com.sun.jdi.connect.spi.Connection;
 import eq.point.of.sale.system.Queries.PointOfSale;
 import static eq.point.of.sale.system.Queries.PointOfSale.rs;
@@ -34,7 +35,8 @@ import net.sf.jasperreports.view.JasperViewer;
  */
 public class frmPointOfSale extends javax.swing.JPanel {
 
-    PointOfSale db = new PointOfSale("localhost", "eqpos", "root", "");
+    PointOfSale db = new PointOfSale();
+    DBConnection DBcon = new DBConnection("localhost", "3306", "eqpos", "root", "001995234");
     String Product_ID;
     Connection conn;
 
@@ -50,8 +52,8 @@ public class frmPointOfSale extends javax.swing.JPanel {
         cbCustomers.setSelectedIndex(-1);
 
 //        Connection conn=db.connection("localhost", "eqpos", "root", "");
-        conn = (Connection) koneksi.getKoneksi("localhost", "3306", "root", "", "eqpos");
-
+        //conn = (Connection) koneksi.getKoneksi("localhost", "3306", "root", "", "eqpos");
+        
     }
 
     /**
@@ -420,8 +422,8 @@ public class frmPointOfSale extends javax.swing.JPanel {
 
         }
         try {
-
-            db.Open();
+            DBcon.Open();
+            //db.Open();
             db.customerAddress(cbCustomers.getSelectedItem().toString());
             if (rs.next()) {
 
@@ -456,7 +458,7 @@ public class frmPointOfSale extends javax.swing.JPanel {
     public final void GetCustomers() {
         cbCustomers.removeAllItems();
         try {
-            db.Open();
+            DBcon.Open();
             db.SelectCustomers();
             while (rs.next()) {
                 cbCustomers.addItem(rs.getString(1) + " " + rs.getString(2));
@@ -611,7 +613,7 @@ public class frmPointOfSale extends javax.swing.JPanel {
     private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
         // TODO add your handling code here:
         try {
-            db.Open();
+            DBcon.Open();
             db.SearchProduct(txtSearch.getText());
             tblProducs.setModel(DbUtils.resultSetToTableModel(rs));
             db.Close();
@@ -665,7 +667,7 @@ public class frmPointOfSale extends javax.swing.JPanel {
                             for (int rows = 0; rows < ProductRows; rows++) {
                                 Integer qtyy = (Integer) tblProducs.getValueAt(rows, 0);
                                 String desc = (String) tblProducs.getValueAt(rows, 2);
-                                db.Open();
+                                DBcon.Open();
                                 db.pay(qtyy, desc);
                                 db.Close();
 
@@ -682,7 +684,7 @@ public class frmPointOfSale extends javax.swing.JPanel {
                             JTableProduct();
                             String custom = String.valueOf(cbCustomers.getSelectedItem());
 //                            eqPrint();
-                            db.Open();
+                            DBcon.Open();
                             db.CheckPoints(custom);
                             String customers = String.valueOf(cbCustomers.getSelectedItem());
 
@@ -700,7 +702,7 @@ public class frmPointOfSale extends javax.swing.JPanel {
                             }
                             db.Close();
 
-                            db.Open();
+                            DBcon.Open();
                             db.getDate(day);
 //
                             if (rs.next()) {
@@ -729,7 +731,7 @@ public class frmPointOfSale extends javax.swing.JPanel {
                             } else {
                                 System.out.println("else+ doubleYearTotal");
                                 db.insertReport(day, amount, month, year, amount);
-                                db.Open();
+                                DBcon.Open();
                                 db.getDate(day);
 
                                 if (rs.next()) {
@@ -854,7 +856,7 @@ public class frmPointOfSale extends javax.swing.JPanel {
     private void cbCustomersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cbCustomersMouseClicked
         cbCustomers.removeAllItems();
         try {
-            db.Open();
+            DBcon.Open();
             db.SelectCustomers();
             while (rs.next()) {
                 cbCustomers.addItem(rs.getString(1) + " " + rs.getString(2));
@@ -902,7 +904,7 @@ public class frmPointOfSale extends javax.swing.JPanel {
 
     public final void RefreshtblProducts() {
         try {
-            db.Open();
+            DBcon.Open();
             db.ReadProducts();
             tblProducs.setModel(DbUtils.resultSetToTableModel(rs));
             db.Close();

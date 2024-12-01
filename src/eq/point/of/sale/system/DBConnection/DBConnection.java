@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package DBConnection;
+package eq.point.of.sale.system.DBConnection;
 
 import java.awt.Component;
 import java.sql.Connection;
@@ -36,7 +36,10 @@ public class DBConnection {
     public void Open() throws SQLException {
         this.connection = DriverManager.getConnection(this.Url + this.Database, this.Username, this.Password);
     }
-
+ // To Close Connection
+    public void Close() throws SQLException {
+        connection.close();
+    }
     public Connection gettter() {
         try {
             this.Open();

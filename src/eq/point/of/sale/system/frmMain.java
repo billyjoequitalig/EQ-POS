@@ -5,6 +5,7 @@
  */
 package eq.point.of.sale.system;
 
+import eq.point.of.sale.system.DBConnection.DBConnection;
 import eq.point.of.sale.system.Queries.PointOfSale;
 import static eq.point.of.sale.system.Queries.PointOfSale.rs;
 import static eq.point.of.sale.system.frmUserManagement.btnCreate;
@@ -17,7 +18,8 @@ import javax.swing.JOptionPane;
  */
 public class frmMain extends javax.swing.JFrame {
 
-    PointOfSale db = new PointOfSale("localhost", "eqpos", "root", "");
+    DBConnection DBCon = new DBConnection("localhost", "3306", "eqpos", "root", "001995234");
+    //PointOfSale db = new PointOfSale("localhost", "eqpos", "root", "2001995234");
     frmPointOfSale POS = new frmPointOfSale();
     frmStocks Stocks = new frmStocks();
     frmUserManagement UserManagement = new frmUserManagement();
@@ -37,7 +39,7 @@ public class frmMain extends javax.swing.JFrame {
         Middle.add(Customers);
         Middle.add(UserManagement);
         Middle.add(Supplier);
-         Middle.add(Report);
+        Middle.add(Report);
         POS.setVisible(true);
 
 //        Stocks.setVisible(false);
@@ -283,7 +285,7 @@ public class frmMain extends javax.swing.JFrame {
     }//GEN-LAST:event_btnUserManagementActionPerformed
 
     private void btnReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportActionPerformed
-        JOptionPane.showMessageDialog(null,"UNDER DEVELOPMENT");
+        JOptionPane.showMessageDialog(null, "UNDER DEVELOPMENT");
 //        POS.GetCustomers();
 //        POS.setVisible(false);
 //        Stocks.setVisible(false);

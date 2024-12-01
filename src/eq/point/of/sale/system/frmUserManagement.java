@@ -5,6 +5,7 @@
  */
 package eq.point.of.sale.system;
 
+import eq.point.of.sale.system.DBConnection.DBConnection;
 import eq.point.of.sale.system.Queries.UserManagement;
 import static eq.point.of.sale.system.Queries.UserManagement.rs;
 import java.sql.SQLException;
@@ -20,7 +21,8 @@ import net.proteanit.sql.DbUtils;
  */
 public class frmUserManagement extends javax.swing.JPanel {
 
-    UserManagement db = new UserManagement("localhost", "eqpos", "root", "");
+    UserManagement db = new UserManagement();
+    DBConnection DBCon = new DBConnection("localhost", "3306", "eqpos", "root", "001995234");
     String Account_ID;
 
     /**
@@ -418,10 +420,10 @@ public class frmUserManagement extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 private void ReFreshAccounts() {
         try {
-            db.Open();
+            DBCon.Open();
             db.ReadAccounts();
             tblUser.setModel(DbUtils.resultSetToTableModel(rs));
-            db.Close();
+            DBCon.Close();
         } catch (SQLException ex) {
             Logger.getLogger(frmUserManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -429,10 +431,10 @@ private void ReFreshAccounts() {
 
     private void ReFreshAccountsUser() {
         try {
-            db.Open();
+            DBCon.Open();
             db.ReadAccountsUser();
             tblUser.setModel(DbUtils.resultSetToTableModel(rs));
-            db.Close();
+            DBCon.Close();
         } catch (SQLException ex) {
             Logger.getLogger(frmUserManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -452,14 +454,14 @@ private void ReFreshAccounts() {
             } else if (cbAccessType.getSelectedIndex() == -1) {
                 JOptionPane.showMessageDialog(null, "Please Select Access Type!");
             } else {
-                db.Open();
+                DBCon.Open();
                 db.CheckAccountExist(txtUsername.getText(), Account_ID);
                 if (rs.next()) {
                     JOptionPane.showMessageDialog(this, "Username Already Taken!");
                 } else {
-                    db.Open();
+                    DBCon.Open();
                     db.CreateAccount(txtFname.getText(), txtLname.getText(), txtUsername.getText(), txtPassword.getText(), cbAccessType.getSelectedItem().toString(), "De-Active");
-                    db.Close();
+                    DBCon.Close();
                     ReFreshAccounts();
                     JOptionPane.showMessageDialog(this, "Account Successfully Created");
                     ;
@@ -518,9 +520,9 @@ private void ReFreshAccounts() {
             } else {
                 int Delete = JOptionPane.showConfirmDialog(null, "Delete Account", "Are You Sure You want to Delete this Account", JOptionPane.YES_NO_OPTION);
                 if (Delete == 0) {
-                    db.Open();
+                    DBCon.Open();
                     db.DeleteAccount(Account_ID);
-                    db.Close();
+                    DBCon.Close();
                     ReFreshAccounts();
                     btnClearActionPerformed(evt);
                 }
@@ -544,7 +546,7 @@ private void ReFreshAccounts() {
             } else if (cbAccessType.getSelectedIndex() == -1) {
                 JOptionPane.showMessageDialog(null, "Please Select Access Type!");
             } else {
-                db.Open();
+                DBCon.Open();
                 db.CheckAccountExist(txtUsername.getText(), Account_ID);
                 if (rs.next()) {
                     JOptionPane.showMessageDialog(this, "Username Already Taken!");
@@ -552,9 +554,9 @@ private void ReFreshAccounts() {
                     int Update = JOptionPane.showConfirmDialog(null, "You want to Update", "UPDATE", JOptionPane.YES_NO_OPTION);
                     if (Update == 0) {
                         try {
-                            db.Open();
+                            DBCon.Open();
                             db.UpdateAccount(txtFname.getText(), txtLname.getText(), txtUsername.getText(), txtPassword.getText(), cbAccessType.getSelectedItem().toString(), Account_ID);
-                            db.Close();
+                            DBCon.Close();
                             ReFreshAccounts();
                             btnClearActionPerformed(evt);
                             JOptionPane.showMessageDialog(this, "Successfully Updated");
@@ -607,15 +609,15 @@ private void ReFreshAccounts() {
         // TODO add your handling code here:
         try {
             if (lblStatus.getText().equals("Active")) {
-                db.Open();
+                DBCon.Open();
                 db.UpdateStatus(Account_ID, "De-Active");
-                db.Close();
+                DBCon.Close();
                 lblStatus.setText("De-Active");
                 btnActive.setText("Active");
             } else {
-                db.Open();
+                DBCon.Open();
                 db.UpdateStatus(Account_ID, "Active");
-                db.Close();
+                DBCon.Close();
                 lblStatus.setText("Active");
                 btnActive.setText("De-Active");
             }
@@ -632,7 +634,7 @@ private void ReFreshAccounts() {
 
     public final JTable RefreshUser() {
         try {
-            db.Open();
+            DBCon.Open();
             db.ReadAccounts();
             tblUser.setModel(DbUtils.resultSetToTableModel(rs));
             btnCreate.setEnabled(true);
@@ -647,7 +649,7 @@ private void ReFreshAccounts() {
             lblStatus.setText("");
             Account_ID = "";
             cbAccessType.setSelectedIndex(-1);
-            db.Close();
+            DBCon.Close();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e);
         }
@@ -656,7 +658,7 @@ private void ReFreshAccounts() {
 
     public final JTable RefreshUser1() {
         try {
-            db.Open();
+            DBCon.Open();
             db.ReadAccountsUser();
             tblUser.setModel(DbUtils.resultSetToTableModel(rs));
             btnCreate.setEnabled(false);
@@ -671,7 +673,7 @@ private void ReFreshAccounts() {
             lblStatus.setText("");
             Account_ID = "";
             cbAccessType.setSelectedIndex(-1);
-            db.Close();
+            DBCon.Close();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e);
         }

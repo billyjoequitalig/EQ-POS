@@ -5,6 +5,7 @@
  */
 package eq.point.of.sale.system.Queries;
 
+import eq.point.of.sale.system.DBConnection.DBConnection;
 import static eq.point.of.sale.system.Queries.Supplier.rs;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -17,35 +18,36 @@ import java.sql.Statement;
  */
 public class Supplier {
     public static ResultSet rs;
-    private final String Url;
-    private final String Host;
-    private final String Database;
-    private final String Username;
-    private final String Password;
-    public java.sql.Connection connection = null;
-
-    public Supplier(String host, String database, String username, String password) {
-        Host = host;
-        Database = database;
-        Username = username;
-        Password = password;
-        Url = "jdbc:mysql://" + Host + ":3306/";
-    }
-
-    public void Open() throws SQLException {
-        //To Open Connection
-        connection = DriverManager.getConnection(Url + Database + "?autoReconnect=true&useSSL=false" + "", Username, Password);
-    }
-
-    public void Close() throws SQLException {
-        // To Close Connection
-        connection.close();
-    }
+    DBConnection DBCon = new DBConnection("localhost", "3306", "eqpos", "root", "001995234");
+//    private final String Url;
+//    private final String Host;
+//    private final String Database;
+//    private final String Username;
+//    private final String Password;
+//    public java.sql.Connection DBCon.gettter() = null;
+//
+//    public Supplier(String host, String database, String username, String password) {
+//        Host = host;
+//        Database = database;
+//        Username = username;
+//        Password = password;
+//        Url = "jdbc:mysql://" + Host + ":3306/";
+//    }
+//
+//    public void Open() throws SQLException {
+//        //To Open Connection
+//        DBCon.gettter() = DriverManager.getConnection(Url + Database + "?autoReconnect=true&useSSL=false" + "", Username, Password);
+//    }
+//
+//    public void Close() throws SQLException {
+//        // To Close Connection
+//        DBCon.gettter().close();
+//    }
 
     public boolean ReadSupplier() throws SQLException {
         //Read Supplier
         String sql = "SELECT * FROM supplier ORDER BY SupplierName ASC";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         rs = st.executeQuery(sql);
         return false;
     }
@@ -53,7 +55,7 @@ public class Supplier {
     public boolean DeleteSupplier(String Supplier_ID) throws SQLException {
         //Delete Supplier
         String sql = "DELETE FROM supplier WHERE Supplier_ID = '" + Supplier_ID + "'";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         st.executeUpdate(sql);
         return false;
     }
@@ -61,7 +63,7 @@ public class Supplier {
     public boolean UpdateSupplier(String Supplier_ID, String SupplierName, String contact, String Address) throws SQLException {
         //Update Supplier
         String sql = "UPDATE supplier SET SupplierName= '" + SupplierName + "',Contact='" + contact + "',Address='" + Address + "' WHERE Supplier_ID ='" + Supplier_ID + "' ";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         st.executeUpdate(sql);
         return false;
     }
@@ -69,7 +71,7 @@ public class Supplier {
     public boolean InsertSupplier(String Supplier_ID, String SupplierName, String contact, String Address) throws SQLException {
         //Insert Supplier
         String sql = "INSERT INTO supplier (SupplierName,Contact,Address) VALUES ('" + SupplierName + "','" + contact + "','" + Address + "')";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         st.executeUpdate(sql);
         return false;
     }
@@ -77,7 +79,7 @@ public class Supplier {
     public boolean SearchSupplier(String Search) throws SQLException {
         //Search Supplier
         String sql = "SELECT * FROM supplier WHERE CONCAT(SupplierName,Contact,Address) LIKE '%" + Search + "%'";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         rs = st.executeQuery(sql);
         return false;
     }
@@ -85,7 +87,7 @@ public class Supplier {
     public boolean SupplierExist(String Name, String Supplier_ID) throws SQLException {
         //Supplier Exist
         String sql = "SELECT * FROM supplier WHERE SupplierName='" + Name + "' AND Supplier_ID='" + Supplier_ID + "'";
-        Statement st = connection.createStatement();
+        Statement st = DBCon.gettter().createStatement();
         rs = st.executeQuery(sql);
         return false;
     }
