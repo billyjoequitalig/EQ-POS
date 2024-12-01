@@ -17,9 +17,6 @@ import javax.swing.JOptionPane;
  * @author billy
  */
 public class frmMain extends javax.swing.JFrame {
-
-    DBConnection DBCon = new DBConnection("localhost", "3306", "eqpos", "root", "001995234");
-    //PointOfSale db = new PointOfSale("localhost", "eqpos", "root", "2001995234");
     frmPointOfSale POS = new frmPointOfSale();
     frmStocks Stocks = new frmStocks();
     frmUserManagement UserManagement = new frmUserManagement();
@@ -27,10 +24,7 @@ public class frmMain extends javax.swing.JFrame {
     frmSupplier Supplier = new frmSupplier();
     frmReport Report = new frmReport();
 
-    /**
-     * Creates new form frmMain
-     *
-     */
+    //Creates new form frmMain
     public frmMain() {
         initComponents();
         this.setExtendedState(MAXIMIZED_BOTH);
@@ -41,7 +35,6 @@ public class frmMain extends javax.swing.JFrame {
         Middle.add(Supplier);
         Middle.add(Report);
         POS.setVisible(true);
-
 //        Stocks.setVisible(false);
 //        Customers.setVisible(false);
     }
@@ -64,7 +57,6 @@ public class frmMain extends javax.swing.JFrame {
         btnSignout = new javax.swing.JButton();
         btnCustomers = new javax.swing.JButton();
         btnCustomers1 = new javax.swing.JButton();
-        btnExit = new javax.swing.JButton();
         lblWelcome = new javax.swing.JLabel();
         Middle = new javax.swing.JPanel();
 
@@ -174,13 +166,6 @@ public class frmMain extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        btnExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/SystemIcons/Exit.png"))); // NOI18N
-        btnExit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnExitActionPerformed(evt);
-            }
-        });
-
         lblWelcome.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
         lblWelcome.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblWelcome.setText("Welcome");
@@ -189,23 +174,17 @@ public class frmMain extends javax.swing.JFrame {
         Top.setLayout(TopLayout);
         TopLayout.setHorizontalGroup(
             TopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(TopLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, TopLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(TopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(TopLayout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(13, 13, 13))
-                    .addGroup(TopLayout.createSequentialGroup()
-                        .addComponent(lblWelcome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGroup(TopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblWelcome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(13, 13, 13))
         );
         TopLayout.setVerticalGroup(
             TopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(TopLayout.createSequentialGroup()
-                .addGroup(TopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblWelcome, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnExit))
+                .addComponent(lblWelcome, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -239,15 +218,15 @@ public class frmMain extends javax.swing.JFrame {
         Supplier.setVisible(false);
     }//GEN-LAST:event_btnStocksActionPerformed
 
-    private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
-        // TODO add your handling code here:
-        System.exit(0);
-    }//GEN-LAST:event_btnExitActionPerformed
-
     private void btnSignoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignoutActionPerformed
         // TODO add your handling code here:
-        this.setVisible(false);
-        new frmLogin().setVisible(true);
+        int response = JOptionPane.showConfirmDialog(null,
+                "Do you want to logout?", "Confirm",
+                JOptionPane.YES_NO_OPTION);
+        if (response == JOptionPane.YES_OPTION) {
+            this.setVisible(false);
+            new frmLogin().setVisible(true);
+        }
     }//GEN-LAST:event_btnSignoutActionPerformed
 
     private void btnPointOfSaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPointOfSaleActionPerformed
@@ -357,7 +336,6 @@ public class frmMain extends javax.swing.JFrame {
     private javax.swing.JPanel Top;
     private javax.swing.JButton btnCustomers;
     private javax.swing.JButton btnCustomers1;
-    private javax.swing.JButton btnExit;
     private javax.swing.JButton btnPointOfSale;
     public static javax.swing.JButton btnReport;
     private javax.swing.JButton btnSignout;

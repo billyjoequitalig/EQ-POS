@@ -23,6 +23,7 @@ import javax.swing.table.TableModel;
 import net.proteanit.sql.DbUtils;
 import java.util.List;
 import java.util.Map;
+import javax.swing.ListSelectionModel;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.util.JRLoader;
@@ -37,8 +38,6 @@ public class frmPointOfSale extends javax.swing.JPanel {
 
     PointOfSale db = new PointOfSale();
     DBConnection DBcon = new DBConnection("localhost", "3306", "eqpos", "root", "001995234");
-    String Product_ID;
-    Connection conn;
 
     /**
      * Creates new form frmPointOfSale
@@ -53,7 +52,6 @@ public class frmPointOfSale extends javax.swing.JPanel {
 
 //        Connection conn=db.connection("localhost", "eqpos", "root", "");
         //conn = (Connection) koneksi.getKoneksi("localhost", "3306", "root", "", "eqpos");
-        
     }
 
     /**
@@ -81,7 +79,7 @@ public class frmPointOfSale extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         btnNewTransaction = new javax.swing.JButton();
         btnPlaceOrder = new javax.swing.JButton();
-        btnNewTransaction2 = new javax.swing.JButton();
+        btnPay = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         lblTotal = new javax.swing.JLabel();
         btnRemoveOrder = new javax.swing.JButton();
@@ -202,6 +200,11 @@ public class frmPointOfSale extends javax.swing.JPanel {
             }
         });
         tblOrders.setRowHeight(30);
+        tblOrders.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                tblOrdersMousePressed(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblOrders);
 
         cbCustomers.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
@@ -233,6 +236,7 @@ public class frmPointOfSale extends javax.swing.JPanel {
 
         btnNewTransaction.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
         btnNewTransaction.setText("New Transaction");
+        btnNewTransaction.setEnabled(false);
         btnNewTransaction.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNewTransactionActionPerformed(evt);
@@ -247,11 +251,12 @@ public class frmPointOfSale extends javax.swing.JPanel {
             }
         });
 
-        btnNewTransaction2.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
-        btnNewTransaction2.setText("Pay");
-        btnNewTransaction2.addActionListener(new java.awt.event.ActionListener() {
+        btnPay.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        btnPay.setText("Pay");
+        btnPay.setEnabled(false);
+        btnPay.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNewTransaction2ActionPerformed(evt);
+                btnPayActionPerformed(evt);
             }
         });
 
@@ -265,6 +270,7 @@ public class frmPointOfSale extends javax.swing.JPanel {
 
         btnRemoveOrder.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
         btnRemoveOrder.setText("Remove Order");
+        btnRemoveOrder.setEnabled(false);
         btnRemoveOrder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRemoveOrderActionPerformed(evt);
@@ -300,7 +306,7 @@ public class frmPointOfSale extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnRemoveOrder)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnNewTransaction2, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnPay, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnPayLogs, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(459, 459, 459))
@@ -362,7 +368,7 @@ public class frmPointOfSale extends javax.swing.JPanel {
                     .addComponent(btnNewTransaction, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnRemoveOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(CenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnNewTransaction2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnPay, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btnPayLogs, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btnPlaceOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(23, Short.MAX_VALUE))
@@ -389,7 +395,7 @@ public class frmPointOfSale extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     public final void JTableProduct() {
-
+        tblProducs.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tblProducs.setDefaultEditor(Object.class, null);
         TableColumnModel tcm = tblProducs.getColumnModel();
         tcm.getColumn(0).setPreferredWidth(70);
@@ -400,6 +406,7 @@ public class frmPointOfSale extends javax.swing.JPanel {
     }
 
     public final void JTableProductOrder() {
+        tblOrders.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tblOrders.setDefaultEditor(Object.class, null);
         TableColumnModel tcm = tblOrders.getColumnModel();
         tcm.getColumn(0).setPreferredWidth(50);
@@ -415,7 +422,8 @@ public class frmPointOfSale extends javax.swing.JPanel {
 //        progressbar.setValue(0);
 //        progressbar.setStringPainted(true);
 
-        List lista = new ArrayList();
+//        List lista = new ArrayList();
+        List<PrintReceipt> lista = new ArrayList<>();
         for (int i = 0; i < tblOrders.getRowCount(); i++) {
             PrintReceipt pr = new PrintReceipt(tblOrders.getValueAt(i, 0).toString(), tblOrders.getValueAt(i, 1).toString(), tblOrders.getValueAt(i, 2).toString(), tblOrders.getValueAt(i, 3).toString(), tblOrders.getValueAt(i, 4).toString());
             lista.add(pr);
@@ -428,7 +436,7 @@ public class frmPointOfSale extends javax.swing.JPanel {
             if (rs.next()) {
 
                 JasperReport reporte = (JasperReport) JRLoader.loadObjectFromFile("src\\eq\\point\\of\\sale\\system\\eqPrint.jasper");
-                Map parameter = new HashMap();
+                Map<String, Object> parameter = new HashMap<>();
                 parameter.put("address", rs.getString(1));
                 parameter.put("total", lblTotal.getText());
                 parameter.put("customerName", cbCustomers.getSelectedItem());
@@ -450,7 +458,7 @@ public class frmPointOfSale extends javax.swing.JPanel {
 //            JasperPrintManager.printReport(jasperPrint, false);
                 db.Close();
             }
-        } catch (Exception e) {
+        } catch (SQLException | JRException e) {
             JOptionPane.showMessageDialog(null, e);
         }
     }
@@ -458,6 +466,7 @@ public class frmPointOfSale extends javax.swing.JPanel {
     public final void GetCustomers() {
         cbCustomers.removeAllItems();
         try {
+            cbCustomers.addItem("");
             DBcon.Open();
             db.SelectCustomers();
             while (rs.next()) {
@@ -471,7 +480,7 @@ public class frmPointOfSale extends javax.swing.JPanel {
     Integer EnterCash_gave;
 
     private Integer ShowInputDialog() {
-        String Quantity = null;
+        String Quantity;
         int Qty = 0;
         try {
             Quantity = JOptionPane.showInputDialog("Please Insert Quantity");
@@ -487,7 +496,7 @@ public class frmPointOfSale extends javax.swing.JPanel {
     }
 
     private Integer showInputCashGave() {
-        String Quantity = null;
+        String Quantity;
         int Qty = 0;
         try {
             Quantity = JOptionPane.showInputDialog("Please Insert Cash Amount");
@@ -509,74 +518,72 @@ public class frmPointOfSale extends javax.swing.JPanel {
     }//GEN-LAST:event_btnPlaceOrderActionPerformed
     private void PlaceOrder() {
         try {
-            if (cbCustomers.getSelectedIndex() == -1) {
-                lblMessage.setText("*Please Select Customer!");
+            int[] ProductIndex = tblProducs.getSelectedRows();
+            TableModel productModel = tblProducs.getModel();
+            Object[] row = new Object[11];
+            DefaultTableModel model1 = (DefaultTableModel) tblOrders.getModel();
+            if (tblProducs.getModel().getRowCount() != 0 && ProductIndex.length == 0) {
+                JOptionPane.showMessageDialog(null, "Plese Select the product you want \n to add.");
+            }
+            if (tblOrders.getRowCount() >= 18) {
+                JOptionPane.showMessageDialog(null, "TOO MUCH DATA!\n, Maximum of 18 items\nRemove Some products to continue\n If you have additional order create another receipt");
             } else {
-                int[] ProductIndex = tblProducs.getSelectedRows();
-                TableModel productModel = tblProducs.getModel();
-                Object[] row = new Object[11];
-                DefaultTableModel model1 = (DefaultTableModel) tblOrders.getModel();
-                if (tblProducs.getModel().getRowCount() != 0 && ProductIndex.length == 0) {
-                    JOptionPane.showMessageDialog(null, "Plese Select the product you want \n to add.");
-                }
-                if (tblOrders.getRowCount() >= 18) {
-                    JOptionPane.showMessageDialog(null, "TOO MUCH DATA!\n, Maximum of 18 items\nRemove Some products to continue\n If you have additional order create another receipt");
-
-                } else {
-
-                    for (int x = 0; x < ProductIndex.length; x++) {
-                        row[1] = productModel.getValueAt(ProductIndex[x], 1);
-                        row[2] = productModel.getValueAt(ProductIndex[x], 2);
-                        row[3] = productModel.getValueAt(ProductIndex[x], 3);
-                        ShowInputDialog();
-                        int Stockleft = (int) productModel.getValueAt(ProductIndex[x], 0) - EnterQuantity;
-                        Double Total = (Double) row[3] * EnterQuantity;
-                        if (Stockleft < 0) {
-                            JOptionPane.showMessageDialog(null, "Not Enough Stocks!");
-                            break;
-                        }
-                        if (EnterQuantity == 0) {
-                            JOptionPane.showMessageDialog(null, "Please Insert Valid Quantity");
-                        } else if (EnterQuantity != 0) {
-                            int OrderRowCount = model1.getRowCount();
-                            if (OrderRowCount == 0) {
+                for (int x = 0; x < ProductIndex.length; x++) {
+                    row[1] = productModel.getValueAt(ProductIndex[x], 1);
+                    row[2] = productModel.getValueAt(ProductIndex[x], 2);
+                    row[3] = productModel.getValueAt(ProductIndex[x], 3);
+                    ShowInputDialog();
+                    int Stockleft = (int) productModel.getValueAt(ProductIndex[x], 0) - EnterQuantity;
+                    Double Total = (Double) row[3] * EnterQuantity;
+                    if (Stockleft < 0) {
+                        JOptionPane.showMessageDialog(null, "Not Enough Stocks!");
+                        break;
+                    }
+                    if (EnterQuantity == 0) {
+                        JOptionPane.showMessageDialog(null, "Please Insert Valid Quantity");
+                    } else if (EnterQuantity != 0) {
+                        int OrderRowCount = model1.getRowCount();
+                        if (OrderRowCount == 0) {
+                            model1.addRow(row);
+                            model1.setValueAt(EnterQuantity, OrderRowCount, 0);
+                            model1.setValueAt(Total, OrderRowCount, 4);
+                            productModel.setValueAt(Stockleft, ProductIndex[x], 0);
+                            ProductArray.add(ProductIndex[x]);
+                            ComputeTotal();
+                        } else if (model1.getRowCount() != 0) {
+                            boolean Duplicated = false;
+                            Double GrandTotal = Double.valueOf(lblTotal.getText());
+                            for (int a = 0; a < OrderRowCount; a++) {
+                                if (row[2].equals(model1.getValueAt(a, 2))) {
+                                    int GetOrderQty = (int) model1.getValueAt(a, 0);
+                                    model1.setValueAt(GetOrderQty + EnterQuantity, a, 0);
+                                    int CurrentQty = (int) model1.getValueAt(a, 0);
+                                    productModel.setValueAt(Stockleft, ProductIndex[x], 0);
+                                    model1.setValueAt(CurrentQty * (Double) model1.getValueAt(a, 3), a, 4);
+                                    Duplicated = true;
+                                    Double GetOrderPrice = (Double) model1.getValueAt(a, 3);
+                                    Double GetNewOrderPrice = GetOrderPrice * EnterQuantity;
+                                    GrandTotal = GrandTotal + GetNewOrderPrice;
+                                    lblTotal.setText(GrandTotal.toString());
+                                }
+                            }
+                            if (Duplicated != true) {
                                 model1.addRow(row);
                                 model1.setValueAt(EnterQuantity, OrderRowCount, 0);
                                 model1.setValueAt(Total, OrderRowCount, 4);
                                 productModel.setValueAt(Stockleft, ProductIndex[x], 0);
                                 ProductArray.add(ProductIndex[x]);
                                 ComputeTotal();
-                            } else if (model1.getRowCount() != 0) {
-                                boolean Duplicated = false;
-                                Double GrandTotal = Double.valueOf(lblTotal.getText());
-                                for (int a = 0; a < OrderRowCount; a++) {
-                                    if (row[2].equals(model1.getValueAt(a, 2))) {
-                                        int GetOrderQty = (int) model1.getValueAt(a, 0);
-                                        model1.setValueAt(GetOrderQty + EnterQuantity, a, 0);
-                                        int CurrentQty = (int) model1.getValueAt(a, 0);
-                                        productModel.setValueAt(Stockleft, ProductIndex[x], 0);
-                                        model1.setValueAt(CurrentQty * (Double) model1.getValueAt(a, 3), a, 4);
-                                        Duplicated = true;
-                                        Double GetOrderPrice = (Double) model1.getValueAt(a, 3);
-                                        Double GetNewOrderPrice = GetOrderPrice * EnterQuantity;
-                                        GrandTotal = GrandTotal + GetNewOrderPrice;
-                                        lblTotal.setText(GrandTotal.toString());
-                                    }
-                                }
-                                if (Duplicated != true) {
-                                    model1.addRow(row);
-                                    model1.setValueAt(EnterQuantity, OrderRowCount, 0);
-                                    model1.setValueAt(Total, OrderRowCount, 4);
-                                    productModel.setValueAt(Stockleft, ProductIndex[x], 0);
-                                    ProductArray.add(ProductIndex[x]);
-                                    ComputeTotal();
-                                }
                             }
                         }
+                        btnNewTransaction.setEnabled(true);
+                        btnPay.setEnabled(true);
                     }
                 }
             }
+
         } catch (HeadlessException | NumberFormatException e) {
+
         }
     }
 
@@ -607,6 +614,9 @@ public class frmPointOfSale extends javax.swing.JPanel {
                 RefreshtblProducts();
                 JTableProduct();
                 lblTotal.setText("0.0");
+                btnNewTransaction.setEnabled(false);
+                btnRemoveOrder.setEnabled(false);
+                btnPay.setEnabled(false);
             }
         }
     }//GEN-LAST:event_btnNewTransactionActionPerformed
@@ -627,210 +637,164 @@ public class frmPointOfSale extends javax.swing.JPanel {
         // TODO add your handling code here:
 
         int row = tblProducs.getSelectedRow();
-        Product_ID = tblProducs.getValueAt(row, 0).toString();
+        tblProducs.getValueAt(row, 0).toString();
         btnPlaceOrder.setEnabled(true);
     }//GEN-LAST:event_tblProducsMouseClicked
-    private void btnNewTransaction2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewTransaction2ActionPerformed
+    private void btnPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPayActionPerformed
         Date date = new Date();
-
         SimpleDateFormat sdfDay = new SimpleDateFormat("yyyy-MM-dd");
         String day = sdfDay.format(date);
-
         SimpleDateFormat sdfMonth = new SimpleDateFormat("MM");
-
         String month = sdfMonth.format(date);
-
         SimpleDateFormat sdfYear = new SimpleDateFormat("YYYY");
         String year = sdfYear.format(date);
-
-        if (tblOrders.getModel().getRowCount() == 0) {
-            JOptionPane.showMessageDialog(null, "Please Add products in the order list table!");
-        } else if (cbCustomers.getSelectedIndex() == -1) {
-            JOptionPane.showMessageDialog(null, "Please Select Customer!");
+        showInputCashGave();
+        Double amount = Double.valueOf(lblTotal.getText());
+        if (EnterCash_gave == 0 || EnterCash_gave < amount) {
+            JOptionPane.showMessageDialog(null, "Not enough Cash");
         } else {
-            showInputCashGave();
-            Double amount = Double.valueOf(lblTotal.getText());
-            if (EnterCash_gave == 0 || EnterCash_gave < amount) {
-                JOptionPane.showMessageDialog(null, "Not enough Cash");
-
-            } else {
-
-                if (tblOrders.getRowCount() >= 18) {
-                    JOptionPane.showMessageDialog(null, "TOO MUCH DATA!\n, Maximum of 18 items\nRemove Some products to continue\n If you have additional order create another receipt");
-                } else {
-                    int msg = JOptionPane.showConfirmDialog(null, "THIS PROCESS IS CANNOT BE UNDONE \n This will add   " + lblTotal.getText() + "   Points to user \n   " + cbCustomers.getSelectedItem().toString(), "CONFIRM PAYMENT", JOptionPane.YES_NO_OPTION);
-                    if (msg == 0) {
-                        try {
-                            int orderRows = tblOrders.getRowCount();
-                            int ProductRows = tblProducs.getRowCount();
-
-                            for (int rows = 0; rows < ProductRows; rows++) {
-                                Integer qtyy = (Integer) tblProducs.getValueAt(rows, 0);
-                                String desc = (String) tblProducs.getValueAt(rows, 2);
-                                DBcon.Open();
-                                db.pay(qtyy, desc);
-                                db.Close();
-
-                            }
-                            DefaultTableModel dm = (DefaultTableModel) tblOrders.getModel();
-                            int rowCount = dm.getRowCount();
+            //int msg = JOptionPane.showConfirmDialog(null, "THIS PROCESS IS CANNOT BE UNDONE \n This will add   " + lblTotal.getText() + "   Points to user \n   " + cbCustomers.getSelectedItem().toString(), "CONFIRM PAYMENT", JOptionPane.YES_NO_OPTION);
+//            int msg = JOptionPane.showConfirmDialog(null, "THIS PROCESS IS CANNOT BE UNDONE \n This will add   " + lblTotal.getText() + "   Points to user \n   ", "CONFIRM PAYMENT", JOptionPane.YES_NO_OPTION);
+//            if (msg == 0) {
+            try {
+                int ProductRows = tblProducs.getRowCount();
+                for (int rows = 0; rows < ProductRows; rows++) {
+                    Integer qtyy = (Integer) tblProducs.getValueAt(rows, 0);
+                    String desc = (String) tblProducs.getValueAt(rows, 2);
+                    DBcon.Open();
+                    db.pay(qtyy, desc);
+                    db.Close();
+                }
+                DefaultTableModel dm = (DefaultTableModel) tblOrders.getModel();
+                int rowCount = dm.getRowCount();
 //                        for (int i = rowCount - 1; i >= 0; i--) {
 //                            dm.removeRow(i);
 //                            ProductArray.removeAll(ProductArray);
 //                        }
-                            Double Total = EnterCash_gave - amount;
-                            JOptionPane.showMessageDialog(null, "PURCHASE SUCCESS " + "\nCustomer: " + cbCustomers.getSelectedItem() + "\nCash: " + EnterCash_gave + "\nTotal: " + amount + "\nChange: " + Total);
-                            RefreshtblProducts();
-                            JTableProduct();
-                            String custom = String.valueOf(cbCustomers.getSelectedItem());
+                Double Total = EnterCash_gave - amount;
+                JOptionPane.showMessageDialog(null, "PURCHASE SUCCESS " + "\nCustomer: " + cbCustomers.getSelectedItem() + "\nCash: " + EnterCash_gave + "\nTotal: " + amount + "\nChange: " + Total);
+                RefreshtblProducts();
+                JTableProduct();
+                String custom = String.valueOf(cbCustomers.getSelectedItem());
 //                            eqPrint();
-                            DBcon.Open();
-                            db.CheckPoints(custom);
-                            String customers = String.valueOf(cbCustomers.getSelectedItem());
-
-                            for (int row = 0; row < dm.getRowCount(); row++) {
-                                int qty = (int) tblOrders.getValueAt(row, 0);
-                                String desc = (String) tblOrders.getValueAt(row, 2);
-                                db.PayLogs(frmMain.lblWelcome.getText().replace("Welcome", ""), EnterCash_gave, amount, Total, qty, desc, customers);
-                            }
+                DBcon.Open();
+                db.CheckPoints(custom);
+                String customers = String.valueOf(cbCustomers.getSelectedItem());
+                for (int row = 0; row < dm.getRowCount(); row++) {
+                    int qty = (int) tblOrders.getValueAt(row, 0);
+                    String desc = (String) tblOrders.getValueAt(row, 2);
+                    db.PayLogs(frmMain.lblWelcome.getText().replace("Welcome", ""), EnterCash_gave, amount, Total, qty, desc, customers);
+                }
+                if (rs.next()) {
+                    String Stringpoints = rs.getString(1);
+                    Double IntPoints = Double.valueOf(Stringpoints);
+                    Double lbltotal = Double.valueOf(lblTotal.getText());
+                    Double FinalTotal = IntPoints + lbltotal;
+                    db.points(custom, FinalTotal);
+                }
+                db.Close();
+                DBcon.Open();
+                db.getDate(day);
+                if (rs.next()) {
+                    String reportAmount = rs.getString(2);
+                    Double totalAmount = Double.valueOf(reportAmount);
+                    Double lblttal = Double.valueOf(lblTotal.getText());
+                    Double UltimateTOtal = totalAmount + lblttal;
+                    db.updateReportSum(UltimateTOtal, day);
+                    db.getYearlyTotal(year);
+                    if (rs.next()) {
+                        String stringYearTotal = rs.getString(1);
+                        Double doubleYearTotal = Double.valueOf(stringYearTotal);
+                        db.getMonthlyTotal(month, year);
+                        if (rs.next()) {
+                            String monthly = rs.getString(1);
+                            Double doubleMonthly = Double.valueOf(monthly);
+                            db.updateReportSumFinal(month, year, doubleMonthly, doubleYearTotal);
+                        }
+                    }
+                    db.Close();
+                } else {
+                    System.out.println("else+ doubleYearTotal");
+                    db.insertReport(day, amount, month, year, amount);
+                    DBcon.Open();
+                    db.getDate(day);
+                    if (rs.next()) {
+                        String reportAmount = rs.getString(2);
+                        Double totalAmount = Double.valueOf(reportAmount);
+                        Double lblttal = Double.valueOf(lblTotal.getText());
+                        Double UltimateTOtal = totalAmount + lblttal;
+                        db.updateReportSum(UltimateTOtal, day);
+                        db.getYearlyTotal(year);
+                        if (rs.next()) {
+                            String stringYearTotal = rs.getString(1);
+                            Double doubleYearTotal = Double.valueOf(stringYearTotal);
+                            System.out.println(doubleYearTotal);
                             if (rs.next()) {
-                                String Stringpoints = rs.getString(1);
-                                Double IntPoints = Double.valueOf(Stringpoints);
-                                Double lbltotal = Double.valueOf(lblTotal.getText());
-                                Double FinalTotal = IntPoints + lbltotal;
-                                db.points(custom, FinalTotal);
+
+                                String monthly = rs.getString(1);
+                                Double doubleMonthly = Double.valueOf(monthly);
+                                db.updateReportSumFinal(month, year, doubleMonthly, doubleYearTotal);
                             }
                             db.Close();
-
-                            DBcon.Open();
-                            db.getDate(day);
-//
-                            if (rs.next()) {
-                                String reportAmount = reportAmount = rs.getString(2);
-                                Double totalAmount = Double.valueOf(reportAmount);
-                                Double lblttal = Double.valueOf(lblTotal.getText());
-                                Double UltimateTOtal = totalAmount + lblttal;
-                                db.updateReportSum(UltimateTOtal, day);
-
-                                db.getYearlyTotal(year);
-                                if (rs.next()) {
-                                    String stringYearTotal = rs.getString(1);
-                                    Double doubleYearTotal = Double.valueOf(stringYearTotal);
-
-                                    db.getMonthlyTotal(month, year);
-                                    if (rs.next()) {
-
-                                        String monthly = rs.getString(1);
-                                        Double doubleMonthly = Double.valueOf(monthly);
-                                        db.updateReportSumFinal(month, year, doubleMonthly, doubleYearTotal);
-
-                                    }
-
-                                }
-                                db.Close();
-                            } else {
-                                System.out.println("else+ doubleYearTotal");
-                                db.insertReport(day, amount, month, year, amount);
-                                DBcon.Open();
-                                db.getDate(day);
-
-                                if (rs.next()) {
-                                    String reportAmount = reportAmount = rs.getString(2);
-                                    Double totalAmount = Double.valueOf(reportAmount);
-                                    Double lblttal = Double.valueOf(lblTotal.getText());
-                                    Double UltimateTOtal = totalAmount + lblttal;
-                                    db.updateReportSum(UltimateTOtal, day);
-                                    db.getYearlyTotal(year);
-                                    if (rs.next()) {
-
-                                        String stringYearTotal = rs.getString(1);
-                                        Double doubleYearTotal = Double.valueOf(stringYearTotal);
-                                        System.out.println(doubleYearTotal);
-
-                                        if (rs.next()) {
-
-                                            String monthly = rs.getString(1);
-                                            Double doubleMonthly = Double.valueOf(monthly);
-                                            db.updateReportSumFinal(month, year, doubleMonthly, doubleYearTotal);
-
-                                        }
-                                        db.Close();
-                                    }
-                                }
-                            }
-
-                            for (int i = rowCount - 1; i >= 0; i--) {
-                                dm.removeRow(i);
-                                ProductArray.removeAll(ProductArray);
-                            }
-                            lblTotal.setText("0.0");
-                            cbCustomers.setSelectedIndex(-1);
-
-                        } catch (SQLException e) {
-                            JOptionPane.showMessageDialog(null, e);
                         }
                     }
                 }
+                for (int i = rowCount - 1; i >= 0; i--) {
+                    dm.removeRow(i);
+                    ProductArray.removeAll(ProductArray);
+                }
+                lblTotal.setText("0.0");
+                cbCustomers.setSelectedIndex(-1);
+
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, e);
             }
+//            }
         }
 
-    }//GEN-LAST:event_btnNewTransaction2ActionPerformed
+    }//GEN-LAST:event_btnPayActionPerformed
 
     private void btnRemoveOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveOrderActionPerformed
-
-        DefaultTableModel tblOrder = (DefaultTableModel) tblOrders.getModel();
-
-        Object OrderRow = new Object();
 //        for (int i = 0; i < OrderIndex.length; i++) {
 //            tblOrder.removeRow(OrderIndex[i]);
 //
 //        }
         DefaultTableModel DefaultblOrders = (DefaultTableModel) tblOrders.getModel();
         DefaultTableModel DefaultTblProducts = (DefaultTableModel) tblProducs.getModel();
-
         int[] ProductIndex = tblProducs.getSelectedRows();
         int[] OrderIndex = tblOrders.getSelectedRows();
-        if (tblOrders.getModel().getRowCount() != 0 && OrderIndex.length == 0) {
-            JOptionPane.showMessageDialog(null, "Plese Select the product you want \n to remove from the Order List Table.");
-        }
-        if (tblOrders.getModel().getRowCount() == 0 && OrderIndex.length == 0) {
-            JOptionPane.showMessageDialog(null, "Please Place an order before \n removing an order from the Order List Table.");
-        }
-
         Object[] row = new Object[11];
-        int sum = 0;
+        int sum;
         TableModel productModel = tblProducs.getModel();
         TableModel OrderModel = tblOrders.getModel();
         if (tblOrders.getModel().getRowCount() != 0) {
             for (int x = 0, y = 0; x < OrderIndex.length && y < ProductIndex.length; x++, y++) {
-
                 Integer rr = ProductArray.remove(OrderIndex[x]);
-
                 row[0] = OrderModel.getValueAt(OrderIndex[x], 0);
                 row[4] = OrderModel.getValueAt(OrderIndex[x], 4);
-
                 Object OQty = row[0];
                 Object tal = row[4];
-
                 String OrderQty = String.valueOf(OQty);
                 String Otal = String.valueOf(tal);
                 Integer IntOrderQty = Integer.valueOf(OrderQty);
-
                 row[0] = productModel.getValueAt(rr, 0);
                 Object PQty = row[0];
                 String ProductQty = String.valueOf(PQty);
                 Integer IntProductQty = Integer.valueOf(ProductQty);
                 sum = IntOrderQty + IntProductQty;
-
                 Double ttal = Double.valueOf(Otal);
                 Double lblttal = Double.valueOf(lblTotal.getText());
-
                 Double FinalTotal = lblttal - ttal;
                 String q = String.valueOf(FinalTotal);
                 lblTotal.setText(q);
-
                 DefaultblOrders.removeRow(OrderIndex[x]);
                 DefaultTblProducts.setValueAt(sum, rr, 0);
+                btnRemoveOrder.setEnabled(false);
+                if (OrderModel.getRowCount() == 0) {
+                    System.out.println(OrderModel.getRowCount());
+                    btnNewTransaction.setEnabled(false);
+                    btnPay.setEnabled(false);
+                }
             }
         }
     }//GEN-LAST:event_btnRemoveOrderActionPerformed
@@ -856,6 +820,7 @@ public class frmPointOfSale extends javax.swing.JPanel {
     private void cbCustomersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cbCustomersMouseClicked
         cbCustomers.removeAllItems();
         try {
+            cbCustomers.addItem("");
             DBcon.Open();
             db.SelectCustomers();
             while (rs.next()) {
@@ -875,6 +840,12 @@ public class frmPointOfSale extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_cbCustomersActionPerformed
 
+    private void tblOrdersMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblOrdersMousePressed
+        // TODO add your handling code here:
+        btnNewTransaction.setEnabled(true);
+        btnRemoveOrder.setEnabled(true);
+    }//GEN-LAST:event_tblOrdersMousePressed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Buttom;
@@ -883,7 +854,7 @@ public class frmPointOfSale extends javax.swing.JPanel {
     private javax.swing.JPanel Right;
     private javax.swing.JPanel Top;
     private javax.swing.JButton btnNewTransaction;
-    private javax.swing.JButton btnNewTransaction2;
+    private javax.swing.JButton btnPay;
     private javax.swing.JButton btnPayLogs;
     private javax.swing.JButton btnPlaceOrder;
     private javax.swing.JButton btnRemoveOrder;
